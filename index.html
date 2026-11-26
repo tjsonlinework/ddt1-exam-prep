@@ -142,6 +142,21 @@
   .fb.no{background:rgba(255,90,60,.13);color:var(--coral)}
   .qscore{margin-top:12px;font-weight:700;color:var(--teal);display:none;padding:11px 14px;background:var(--card3);border-radius:12px}
 
+  /* mock test */
+  .mbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:10px;position:sticky;top:72px;z-index:4;background:var(--card);padding:8px 0}
+  .timer{font-size:1.3rem;font-weight:800;color:var(--teal);background:var(--card3);padding:6px 16px;border-radius:999px;border:1px solid var(--line2)}
+  .timer.low{color:var(--coral);animation:tpulse 1s infinite}
+  @keyframes tpulse{50%{opacity:.45}}
+  .mprog{font-size:.85rem;color:var(--mut)}
+  .mq{border:1px solid var(--line2);border-radius:14px;padding:14px 16px;margin:11px 0;background:var(--card2)}
+  .mtopic{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-right:6px}
+  .mopt.msel{border-color:var(--accent);background:rgba(255,61,135,.14)}
+  .btn-primary{margin-top:14px;border:none;background:linear-gradient(135deg,var(--coral),var(--magenta));color:#fff;font-weight:700;padding:12px 26px;border-radius:12px;cursor:pointer;font-size:.95rem}
+  .btn-primary:hover{filter:brightness(1.08)}
+  .btn-primary:disabled{opacity:.5;cursor:default}
+  .scorebig{font-size:2.4rem;font-weight:800;background:linear-gradient(90deg,var(--teal),var(--green));-webkit-background-clip:text;background-clip:text;color:transparent;margin:8px 0}
+  .scorebig span{font-size:1.05rem;color:var(--mut);-webkit-text-fill-color:var(--mut)}
+
   /* videos */
   .vgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:15px}
   .vcard{text-decoration:none;color:var(--ink);border:1px solid var(--line2);border-radius:15px;overflow:hidden;background:var(--card2);transition:.2s;display:block}
@@ -1159,6 +1174,9 @@ DATA.forEach((c,i)=>{
 const wp=document.createElement('button');
 wp.className='pill'; wp.dataset.bg='#9a7bff';
 wp.innerHTML='<span class="n">C</span>Section C Walkthroughs'; wp.onclick=()=>show('walk',wp); pills.appendChild(wp);
+const mp=document.createElement('button');
+mp.className='pill'; mp.dataset.bg='#ff3d87';
+mp.innerHTML='<span class="n">M</span>Mock Test'; mp.onclick=()=>show('mock',mp); pills.appendChild(mp);
 
 function esc(s){return s.replace(/"/g,'&quot;');}
 DATA.forEach((c,i)=>{
@@ -1197,6 +1215,7 @@ DATA.forEach((c,i)=>{
     <div class="card accentbar">
       <h4><span class="ei" style="color:${c.accent}">${ICONS.check}</span>Quiz yourself <span style="font-size:.8rem;color:var(--mut);font-weight:400">(${c.quiz.length})</span></h4>
       <p class="lead">No pressure - pick an answer and you will see why. Mistakes help you remember.</p>
+      <div class="fctools"><button class="mini" data-resetquiz="${c.id}">Try again (reset quiz)</button></div>
       ${c.quiz.map((q,qi)=>`
         <div class="q" data-id="${c.id}" data-k="q${qi}" data-a="${q.a}">
           <div class="stem">${qi+1}. ${q.s}</div>
@@ -1254,6 +1273,38 @@ ws.innerHTML=`
   </div>`;
 content.appendChild(ws);
 
+/* ===== Mock Test section ===== */
+const ms=document.createElement('section');
+ms.className='cat'; ms.id='sec-mock'; ms.style.setProperty('--accent','#ff3d87');
+ms.innerHTML=`
+  <div class="sbanner" style="background:linear-gradient(135deg,var(--card),var(--card2))">
+    <div class="sb-txt">
+      <span class="tag" style="background:#ff3d87">Exam simulation</span>
+      <h3>Mock Test</h3>
+      <p>A timed, mixed quiz drawn at random from every topic. Answer them all, then submit to see your score and the explanations. A great final dry run before the paper.</p>
+    </div>
+    <div class="sb-ill">${HEROSVG.exam}</div>
+  </div>
+  <div class="card accentbar" id="mockStart">
+    <h4><span class="ei" style="color:#ff3d87">${ICONS.check}</span>Set up your mock test</h4>
+    <p class="lead">Choose how many questions - the timer gives you about 45 seconds each. Questions are picked at random and shuffled, so every attempt is different. You can retake with a fresh set any time.</p>
+    <div class="fctools">
+      <button class="mini msize" data-n="10">10 questions (7 min)</button>
+      <button class="mini msize" data-n="20">20 questions (15 min)</button>
+      <button class="mini msize" data-n="30">30 questions (22 min)</button>
+    </div>
+    <p class="lead" id="mockPoolNote" style="margin-top:10px"></p>
+  </div>
+  <div class="card accentbar" id="mockArea" style="display:none">
+    <div class="mbar"><div class="timer" id="mTimer">00:00</div><div class="mprog" id="mProg">0 / 0 answered</div></div>
+    <div id="mQs"></div>
+    <button class="btn-primary" id="mSubmit">Submit test</button>
+  </div>
+  <div class="card accentbar exam" id="mockResult" style="display:none"></div>
+`;
+content.appendChild(ms);
+(function(){const n=document.getElementById('mockPoolNote');if(n)n.textContent='Question bank: '+buildPool().length+' questions across all topics.';})();
+
 /* ================= INTERACTIONS ================= */
 function mark(id,k){(progress[id]=progress[id]||new Set()).add(k);updateBar();}
 function updateBar(){
@@ -1273,10 +1324,18 @@ content.addEventListener('click',e=>{
   if(fa){document.querySelectorAll('#fc-'+fa.dataset.flipall+' .flip').forEach(f=>{f.classList.add('on');mark(f.dataset.id,f.dataset.k);});return;}
   const rs=e.target.closest('[data-reset]');
   if(rs){document.querySelectorAll('#fc-'+rs.dataset.reset+' .flip').forEach(f=>f.classList.remove('on'));return;}
+  const rq=e.target.closest('[data-resetquiz]');
+  if(rq){resetQuiz(rq.closest('.card'));return;}
+  const sz=e.target.closest('.msize');
+  if(sz){startMock(+sz.dataset.n);return;}
+  const mo=e.target.closest('.mopt');
+  if(mo){if(mockState&&!mockState.submitted){const i=+mo.dataset.i,oi=+mo.dataset.oi;mockState.answers[i]=oi;document.querySelectorAll('.mopt[data-i="'+i+'"]').forEach(b=>b.classList.remove('msel'));mo.classList.add('msel');updateMprog();}return;}
+  if(e.target.id==='mSubmit'){submitMock(false);return;}
+  if(e.target.id==='mRetake'){document.getElementById('mockStart').style.display='block';document.getElementById('mockArea').style.display='none';document.getElementById('mockResult').style.display='none';window.scrollTo({top:0,behavior:'smooth'});return;}
   const fl=e.target.closest('.flip');
   if(fl){fl.classList.toggle('on');mark(fl.dataset.id,fl.dataset.k);return;}
   const op=e.target.closest('.opt');
-  if(op){
+  if(op&&!op.classList.contains('mopt')){
     const q=op.closest('.q');if(q.classList.contains('answered'))return;
     const a=+q.dataset.a,chosen=+op.dataset.oi;q.classList.add('answered');
     [...q.querySelectorAll('.opt')].forEach(b=>{b.classList.add('lock');if(+b.dataset.oi===a)b.classList.add('correct');});
@@ -1287,6 +1346,46 @@ content.addEventListener('click',e=>{
     mark(q.dataset.id,q.dataset.k);scoreCard(q.closest('.card'));
   }
 });
+function resetQuiz(card){
+  card.querySelectorAll('.q').forEach(q=>{
+    q.classList.remove('answered');
+    q.querySelectorAll('.opt').forEach(b=>b.classList.remove('correct','wrong','lock'));
+    const fb=q.querySelector('.fb');fb.classList.remove('show','ok','no');fb.textContent='';
+  });
+  const box=card.querySelector('.qscore');box.style.display='none';box.textContent='';
+  card.scrollIntoView({behavior:'smooth',block:'start'});
+}
+/* mock test logic */
+let mockState=null, mockTimer=null;
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function buildPool(){const pool=[];DATA.forEach(c=>c.quiz.forEach(q=>pool.push({s:q.s,o:q.o,a:q.a,e:q.e,topic:c.name,accent:c.accent})));return pool;}
+function updateMprog(){if(!mockState)return;const done=mockState.answers.filter(a=>a>=0).length;document.getElementById('mProg').textContent=done+' / '+mockState.total+' answered';}
+function startMockTimer(secs){let t=secs;const el=document.getElementById('mTimer');el.classList.remove('low');const fmt=s=>String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');el.textContent=fmt(t);clearInterval(mockTimer);mockTimer=setInterval(()=>{t--;el.textContent=fmt(Math.max(0,t));if(t<=30)el.classList.add('low');if(t<=0){clearInterval(mockTimer);submitMock(true);}},1000);}
+function startMock(n){
+  const qs=shuffle(buildPool()).slice(0,n);
+  mockState={qs:qs,answers:new Array(qs.length).fill(-1),submitted:false,total:qs.length};
+  document.getElementById('mockStart').style.display='none';
+  document.getElementById('mockResult').style.display='none';
+  const area=document.getElementById('mockArea');area.style.display='block';
+  document.getElementById('mQs').innerHTML=qs.map((q,i)=>'<div class="mq" data-i="'+i+'"><div class="stem"><span class="mtopic" style="color:'+q.accent+'">'+q.topic+'</span> '+(i+1)+'. '+q.s+'</div>'+q.o.map((o,oi)=>'<button class="opt mopt" data-i="'+i+'" data-oi="'+oi+'">'+String.fromCharCode(65+oi)+'. '+o+'</button>').join('')+'<div class="fb" data-e="'+esc(q.e)+'"></div></div>').join('');
+  document.getElementById('mSubmit').disabled=false;
+  updateMprog();startMockTimer(n*45);
+  area.scrollIntoView({behavior:'smooth',block:'start'});
+}
+function submitMock(auto){
+  if(!mockState||mockState.submitted)return;mockState.submitted=true;clearInterval(mockTimer);
+  let right=0;
+  mockState.qs.forEach((q,i)=>{
+    const qel=document.querySelector('.mq[data-i="'+i+'"]');const chosen=mockState.answers[i];const ok=chosen===q.a;if(ok)right++;
+    qel.querySelectorAll('.mopt').forEach(b=>{b.classList.add('lock');const oi=+b.dataset.oi;if(oi===q.a)b.classList.add('correct');else if(oi===chosen)b.classList.add('wrong');});
+    const fb=qel.querySelector('.fb');fb.textContent=(chosen<0?'Not answered. ':ok?'Correct. ':'Not quite. ')+fb.dataset.e;fb.classList.add('show',ok?'ok':'no');
+  });
+  document.getElementById('mSubmit').disabled=true;
+  const pct=Math.round(right/mockState.total*100);
+  const res=document.getElementById('mockResult');res.style.display='block';
+  res.innerHTML='<h4><span class="ei" style="color:#ff3d87">'+ICONS.star+'</span>Your result'+(auto?' (time up)':'')+'</h4><div class="scorebig">'+right+' / '+mockState.total+' <span>('+pct+'%)</span></div><div class="def">'+(pct>=80?'Excellent - you are exam-ready.':pct>=60?'Good work - review the ones you missed above and retake with a fresh set.':'Keep going - revisit the weak topics, then try again. You improve fast with practice.')+'</div><div class="fctools"><button class="mini" id="mRetake">Retake (new questions)</button></div>';
+  res.scrollIntoView({behavior:'smooth',block:'start'});
+}
 content.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){const fl=e.target.closest('.flip');if(fl){e.preventDefault();fl.classList.toggle('on');mark(fl.dataset.id,fl.dataset.k);}}});
 content.addEventListener('toggle',e=>{const d=e.target;if(d.open&&d.dataset.id)mark(d.dataset.id,d.dataset.k);},true);
 
