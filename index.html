@@ -1,0 +1,1316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DDT I - Exam Prep Hub</title>
+<style>
+  :root{
+    --bg:#08060c; --card:#15101d; --card2:#1d1628; --card3:#241a31;
+    --ink:#f6f0ff; --mut:#b4a6c8; --line:#2c2340; --line2:#3a2e52;
+    --coral:#ff5a3c; --gold:#ffbe2e; --magenta:#ff3d87; --teal:#1fe3c6; --green:#49d888; --violet:#9a7bff;
+    --accent:var(--coral);
+    --shadow:0 20px 55px rgba(0,0,0,.5);
+    --r:20px;
+  }
+  html[data-theme="light"]{
+    --bg:#f6f1ea; --card:#ffffff; --card2:#f7f2fb; --card3:#efe8f8;
+    --ink:#1b1330; --mut:#5d5272; --line:#e9e1f2; --line2:#ded2ef;
+    --shadow:0 20px 48px rgba(70,35,100,.13);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;color:var(--ink);line-height:1.62;overflow-x:hidden;
+    background:radial-gradient(1200px 760px at 8% -12%,rgba(255,61,135,.12),transparent 58%),
+               radial-gradient(1050px 640px at 104% -4%,rgba(31,227,198,.12),transparent 55%),
+               radial-gradient(900px 700px at 50% 120%,rgba(154,123,255,.10),transparent 60%),
+               var(--bg);transition:background .4s,color .4s}
+  .fx{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+  .blob{position:absolute;width:50vw;height:50vw;border-radius:50%;filter:blur(72px);opacity:.26;mix-blend-mode:screen}
+  .b1{background:var(--coral);left:-14vw;top:-16vw;animation:d1 23s ease-in-out infinite}
+  .b2{background:var(--magenta);right:-16vw;top:2vw;animation:d2 27s ease-in-out infinite}
+  .b3{background:var(--teal);left:16vw;bottom:-22vw;animation:d3 31s ease-in-out infinite}
+  .b4{background:var(--violet);right:12vw;bottom:-18vw;animation:d1 29s ease-in-out infinite}
+  html[data-theme="light"] .blob{opacity:.15}
+  @keyframes d1{0%,100%{transform:translate(0,0)}50%{transform:translate(6vw,4vw) scale(1.1)}}
+  @keyframes d2{0%,100%{transform:translate(0,0)}50%{transform:translate(-5vw,6vw) scale(1.08)}}
+  @keyframes d3{0%,100%{transform:translate(0,0)}50%{transform:translate(4vw,-5vw) scale(1.12)}}
+  @media (prefers-reduced-motion:reduce){.blob{animation:none}}
+
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:20px 20px 90px}
+  header.top{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:13px}
+  .logo{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,var(--coral),var(--magenta));display:grid;place-items:center;font-weight:800;color:#fff;box-shadow:var(--shadow);font-size:1.05rem}
+  .brand h1{font-size:1.2rem;margin:0}
+  .brand p{margin:0;font-size:.82rem;color:var(--mut)}
+  .toggle{border:1px solid var(--line2);background:var(--card);color:var(--ink);border-radius:999px;padding:9px 15px;cursor:pointer;font-size:.85rem;font-weight:600}
+  .toggle:hover{border-color:var(--accent)}
+
+  .hero{position:relative;overflow:hidden;background:linear-gradient(135deg,var(--card),var(--card2));border:1px solid var(--line2);border-radius:var(--r);padding:34px 30px;box-shadow:var(--shadow);margin:16px 0 20px}
+  .hero:before{content:"";position:absolute;inset:0;background:linear-gradient(120deg,transparent 40%,rgba(255,61,135,.07) 50%,transparent 60%);background-size:280% 280%;animation:sheen 9s linear infinite}
+  @keyframes sheen{to{background-position:280% 0}}
+  .hero h2{margin:0 0 10px;font-size:1.85rem;line-height:1.18;position:relative}
+  .grad{background:linear-gradient(90deg,var(--coral),var(--gold),var(--magenta),var(--violet));background-size:200%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:flow 6s linear infinite}
+  @keyframes flow{to{background-position:200%}}
+  .hero p{margin:0 0 6px;color:var(--mut);max-width:72ch;position:relative}
+  .friendly{display:inline-flex;align-items:center;gap:8px;background:rgba(73,216,136,.12);border:1px solid rgba(73,216,136,.4);color:var(--green);padding:7px 14px;border-radius:999px;font-size:.8rem;font-weight:600;margin-top:16px;position:relative}
+  .statrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;position:relative}
+  .stat{flex:1;min-width:120px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+  .stat b{display:block;font-size:1.5rem;background:linear-gradient(90deg,var(--teal),var(--green));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .stat span{font-size:.76rem;color:var(--mut)}
+  .prog{margin-top:18px;position:relative}
+  .barbox{height:13px;border-radius:999px;background:var(--line);overflow:hidden}
+  .bar{height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,var(--teal),var(--green));transition:width .5s}
+  .prog small{color:var(--mut);display:block;margin-top:7px}
+
+  nav.pills{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 20px;position:sticky;top:6px;z-index:9;padding:8px;background:rgba(18,12,24,.72);backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:16px}
+  html[data-theme="light"] nav.pills{background:rgba(255,255,255,.72)}
+  .pill{border:1px solid var(--line2);background:var(--card);color:var(--mut);border-radius:999px;padding:9px 15px;cursor:pointer;font-size:.85rem;font-weight:600;transition:.18s;white-space:nowrap;display:flex;align-items:center;gap:7px}
+  .pill:hover{color:var(--ink);transform:translateY(-1px)}
+  .pill .n{width:18px;height:18px;border-radius:50%;background:var(--line);display:grid;place-items:center;font-size:.68rem}
+  .pill.on{color:#fff;border-color:transparent}
+  .pill.on .n{background:rgba(255,255,255,.28)}
+
+  section.cat{display:none;animation:fade .4s ease}
+  section.cat.show{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+
+  .sbanner{position:relative;overflow:hidden;border-radius:var(--r);padding:26px 26px;margin-bottom:16px;box-shadow:var(--shadow);border:1px solid var(--line2);display:flex;align-items:center;gap:22px}
+  .sbanner:before{content:"";position:absolute;inset:0;background:radial-gradient(420px 200px at 100% 40%,var(--accent),transparent 70%);opacity:.14}
+  .sb-txt{flex:1;min-width:0;position:relative;z-index:1}
+  .sb-ill{flex:0 0 190px;position:relative;z-index:1;display:grid;place-items:center}
+  .sb-ill svg{width:100%;height:auto;max-width:200px;filter:drop-shadow(0 10px 24px rgba(0,0,0,.35))}
+  @media(max-width:640px){.sb-ill{display:none}}
+  .sbanner .tag{display:inline-block;font-size:.68rem;font-weight:700;letter-spacing:.7px;text-transform:uppercase;padding:5px 12px;border-radius:999px;color:#fff;margin-bottom:8px}
+  .sbanner h3{margin:0 0 6px;font-size:1.5rem}
+  .sbanner p{margin:0;color:var(--mut);max-width:62ch}
+  .sb-ill .pop{animation:pop 7s ease-in-out infinite}
+  @keyframes pop{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+  .draw{stroke-dasharray:1;stroke-dashoffset:1;animation:draw 2.4s ease forwards}
+  @keyframes draw{to{stroke-dashoffset:0}}
+  @media (prefers-reduced-motion:reduce){.pop,.draw{animation:none;stroke-dashoffset:0}}
+  .ei svg{width:17px;height:17px}
+  .pill .n svg{width:11px;height:11px}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:22px 24px;margin-bottom:16px;box-shadow:var(--shadow);position:relative}
+  .card.accentbar{border-left:4px solid var(--accent)}
+  .card h4{margin:0 0 4px;font-size:1.12rem;display:flex;align-items:center;gap:9px}
+  .card h4 .ei{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;background:var(--card3);font-size:.95rem}
+  .lead{color:var(--mut);margin:.2rem 0 1rem}
+
+  .sub{margin:20px 0 8px;font-size:1.02rem;font-weight:700;display:flex;align-items:center;gap:9px}
+  .sub .dot{width:10px;height:10px;border-radius:3px;background:var(--accent);transform:rotate(45deg)}
+  .learn p{margin:.5rem 0}
+  .learn ul{margin:.4rem 0;padding-left:1.15rem}
+  .learn li{margin:.32rem 0}
+  .kw{color:var(--accent);font-weight:700}
+  .def{background:linear-gradient(135deg,var(--card2),var(--card3));border-left:3px solid var(--accent);border-radius:12px;padding:11px 15px;margin:11px 0;font-size:.95rem}
+  .def b{color:var(--ink)}
+  .cmp{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}
+  @media(max-width:620px){.cmp{grid-template-columns:1fr}}
+  .cmp .box{border:1px solid var(--line2);border-radius:13px;padding:13px 15px;background:var(--card2)}
+  .cmp .box h5{margin:0 0 6px;font-size:.95rem;color:var(--accent)}
+  .cmp .box ul{margin:0;padding-left:1.05rem;font-size:.9rem}
+  table.ref{width:100%;border-collapse:collapse;margin:10px 0;font-size:.88rem}
+  table.ref th,table.ref td{border:1px solid var(--line2);padding:8px 10px;text-align:left;vertical-align:top}
+  table.ref th{background:var(--card3);color:var(--ink);font-weight:700}
+  table.ref td b{color:var(--accent)}
+
+  /* flashcards */
+  .fcrow{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+  .flip{perspective:1100px;height:158px;cursor:pointer}
+  .flipin{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d}
+  .flip.on .flipin{transform:rotateY(180deg)}
+  .face{position:absolute;inset:0;backface-visibility:hidden;border-radius:15px;padding:15px;display:flex;align-items:center;justify-content:center;text-align:center;border:1px solid var(--line2)}
+  .front{background:linear-gradient(135deg,var(--card2),var(--card3));font-weight:700;font-size:1rem}
+  .back{background:linear-gradient(135deg,var(--accent),var(--magenta));color:#fff;transform:rotateY(180deg);font-size:.86rem;line-height:1.4}
+  .flip small{position:absolute;bottom:7px;right:11px;font-size:.6rem;color:var(--mut);opacity:.75}
+  .fctools{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+  .mini{border:1px solid var(--line2);background:var(--card2);color:var(--ink);border-radius:999px;padding:7px 13px;cursor:pointer;font-size:.8rem;font-weight:600}
+  .mini:hover{border-color:var(--accent)}
+
+  /* quiz */
+  .q{margin:13px 0;border:1px solid var(--line2);border-radius:15px;padding:15px 17px;background:var(--card2)}
+  .q .stem{font-weight:700;margin-bottom:10px}
+  .opt{display:block;width:100%;text-align:left;border:1px solid var(--line2);background:var(--card);color:var(--ink);border-radius:11px;padding:11px 14px;margin:7px 0;cursor:pointer;font-size:.92rem;transition:.15s}
+  .opt:hover{border-color:var(--accent);transform:translateX(3px)}
+  .opt.correct{border-color:var(--green);background:rgba(73,216,136,.15)}
+  .opt.wrong{border-color:var(--coral);background:rgba(255,90,60,.13)}
+  .opt.lock{cursor:default}
+  .fb{margin-top:9px;font-size:.88rem;padding:10px 13px;border-radius:11px;display:none}
+  .fb.show{display:block}
+  .fb.ok{background:rgba(73,216,136,.13);color:var(--green)}
+  .fb.no{background:rgba(255,90,60,.13);color:var(--coral)}
+  .qscore{margin-top:12px;font-weight:700;color:var(--teal);display:none;padding:11px 14px;background:var(--card3);border-radius:12px}
+
+  /* videos */
+  .vgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:15px}
+  .vcard{text-decoration:none;color:var(--ink);border:1px solid var(--line2);border-radius:15px;overflow:hidden;background:var(--card2);transition:.2s;display:block}
+  .vcard:hover{transform:translateY(-4px);border-color:var(--accent);box-shadow:var(--shadow)}
+  .thumb{position:relative;aspect-ratio:16/9;background-size:cover;background-position:center;background-repeat:no-repeat;display:block}
+  .thumb:before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,0,0,.1),rgba(0,0,0,.45))}
+  .thumb .plabel{position:absolute;left:10px;top:9px;z-index:2;font-size:.68rem;font-weight:700;color:#fff;background:rgba(0,0,0,.45);padding:3px 9px;border-radius:999px;display:flex;align-items:center;gap:5px}
+  .thumb .plabel svg{width:11px;height:11px}
+  .play{position:absolute;inset:0;display:grid;place-items:center}
+  .play span{width:50px;height:50px;border-radius:50%;background:rgba(255,61,135,.92);display:grid;place-items:center;box-shadow:0 6px 20px rgba(0,0,0,.4);transition:.2s}
+  .vcard:hover .play span{transform:scale(1.12)}
+  .play span:after{content:"";border-left:15px solid #fff;border-top:9px solid transparent;border-bottom:9px solid transparent;margin-left:4px}
+  .vlen{position:absolute;right:8px;bottom:8px;background:rgba(0,0,0,.8);color:#fff;font-size:.7rem;padding:2px 7px;border-radius:6px}
+  .vmeta{padding:11px 13px}
+  .vmeta b{display:block;font-size:.9rem;line-height:1.3}
+  .vmeta span{font-size:.76rem;color:var(--mut);display:flex;align-items:center;gap:5px;margin-top:4px}
+  .vmeta span:before{content:"";width:7px;height:7px;border-radius:50%;background:var(--magenta)}
+
+  /* web links */
+  .res{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  @media(max-width:620px){.res{grid-template-columns:1fr}}
+  .reslink{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--line2);border-radius:13px;padding:12px 14px;text-decoration:none;color:var(--ink);background:var(--card2);transition:.18s}
+  .reslink:hover{border-color:var(--accent);transform:translateY(-2px)}
+  .reslink .ic{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;flex:0 0 auto;background:rgba(31,227,198,.16);color:var(--teal)}
+  .reslink .ic svg{width:18px;height:18px}
+  .reslink b{display:block;font-size:.9rem}
+  .reslink span{font-size:.78rem;color:var(--mut)}
+  .badge{font-size:.62rem;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:var(--gold);border:1px solid rgba(255,190,46,.4);padding:1px 7px;border-radius:999px;margin-left:6px}
+
+  /* exam focus */
+  .exam{background:linear-gradient(135deg,rgba(255,190,46,.1),rgba(255,61,135,.08));border:1px solid rgba(255,190,46,.35)}
+  .exam h4{color:var(--gold)}
+  .chips{display:flex;gap:7px;flex-wrap:wrap;margin:9px 0}
+  .chip{font-size:.76rem;border:1px solid var(--line2);background:var(--card);padding:5px 11px;border-radius:999px;color:var(--mut)}
+
+  /* steps */
+  .steps{counter-reset:s;margin:10px 0}
+  .step{position:relative;padding:11px 15px 11px 46px;border:1px solid var(--line2);border-radius:13px;margin:8px 0;background:var(--card2)}
+  .step:before{counter-increment:s;content:counter(s);position:absolute;left:12px;top:11px;width:24px;height:24px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:.8rem;font-weight:700}
+  .step b{color:var(--ink)}
+  details{border:1px solid var(--line2);border-radius:13px;padding:4px 16px;margin:9px 0;background:var(--card2)}
+  summary{cursor:pointer;font-weight:700;padding:10px 0}
+  details[open] summary{color:var(--accent)}
+  .notes .ans{border-top:1px solid var(--line);padding:6px 0 12px;font-size:.93rem}
+  .notes .ans p{margin:.5rem 0}
+  .notes .ans ul,.notes .ans ol{margin:.4rem 0;padding-left:1.2rem}
+  .notes .ans li{margin:.28rem 0}
+  .notes .ans b{color:var(--ink)}
+  .notes details[open]{box-shadow:0 10px 30px rgba(0,0,0,.25)}
+
+  footer{text-align:center;color:var(--mut);font-size:.8rem;margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
+  .credit{display:inline-block;margin-bottom:10px;padding:8px 18px;border-radius:999px;border:1px solid var(--line2);background:var(--card);font-size:.88rem}
+  .credit b{background:linear-gradient(90deg,var(--coral),var(--magenta),var(--violet));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .notice{font-size:.74rem;color:var(--mut);margin-top:6px}
+</style>
+</head>
+<body>
+<div class="fx"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div><div class="blob b4"></div></div>
+<div class="wrap">
+
+  <header class="top">
+    <div class="brand">
+      <div class="logo">DD</div>
+      <div><h1>Digital Design Tools I - Exam Prep Hub</h1><p>M.Des Communication Design - Semester 1</p></div>
+    </div>
+    <button class="toggle" id="themeBtn">Light mode</button>
+  </header>
+
+  <div class="hero">
+    <h2>Relax. You already know more than you think. <span class="grad">Let's revise together.</span></h2>
+    <p>Your complete, friendly companion for the end-semester paper. Six topic worlds, deep but plain-language lessons, a big bank of flashcards and quizzes, real video tutorials with thumbnails, and hand-picked trustworthy websites. No jargon walls, no pressure.</p>
+    <p>Every topic has a gold <b>Exam focus</b> box showing exactly what the paper expects - for all three sections.</p>
+    <span class="friendly">You cannot fail by trying. Small steps count.</span>
+    <div class="statrow">
+      <div class="stat"><b id="sC">0</b><span>Flashcards to flip</span></div>
+      <div class="stat"><b id="sQ">0</b><span>Quiz questions</span></div>
+      <div class="stat"><b id="sV">0</b><span>Video tutorials</span></div>
+      <div class="stat"><b id="sL">0</b><span>Trusted links</span></div>
+    </div>
+    <div class="prog">
+      <div class="barbox"><div class="bar" id="bar"></div></div>
+      <small id="progtxt">Your revision progress will show here as you flip cards and answer quizzes.</small>
+    </div>
+  </div>
+
+  <nav class="pills" id="pills"></nav>
+  <div id="content"></div>
+
+  <footer>
+    <div class="credit">Designed &amp; developed by <b>Tajinder J Singh</b></div>
+    Made for your class - private study material. Use it at your own pace.<br>
+    <span class="notice">Video thumbnails and links open YouTube and official learning sites (Adobe, GCFGlobal, code.org, Adobe Color). Thumbnails load when you are online. If a link ever moves, search its title on the same site.</span>
+  </footer>
+</div>
+
+<script>
+/* ================= DATA ================= */
+const DATA = [
+ /* ---------- FUNDAMENTALS ---------- */
+ {
+  id:'fund', name:'Fundamentals', icon:'&#9635;', accent:'#1fe3c6', tag:'Start here',
+  intro:'How computers see pictures: pixels, bits, colour, resolution and file sizes. These ideas sit under everything you do in Photoshop, Illustrator and InDesign - get them solid and the rest feels easy.',
+  learn:`
+   <div class="sub"><span class="dot"></span>Raster vs vector - the big one</div>
+   <p>A <span class="kw">raster</span> image is a grid of tiny coloured squares called <span class="kw">pixels</span>. Photos are raster. Zoom in too far and the squares show (it goes blurry). A <span class="kw">vector</span> image is made of maths - points, lines and curves - so it stays razor sharp at any size. Logos and icons are vector.</p>
+   <div class="cmp">
+     <div class="box"><h5>Raster (Photoshop)</h5><ul><li>Made of pixels</li><li>Great for photos and texture</li><li>Loses quality when enlarged</li><li>Fixed resolution, heavier files</li><li>JPEG, PNG, TIFF, PSD</li></ul></div>
+     <div class="box"><h5>Vector (Illustrator)</h5><ul><li>Made of maths (paths)</li><li>Great for logos and icons</li><li>Scales with zero quality loss</li><li>Resolution independent, light files</li><li>AI, SVG, EPS, PDF</li></ul></div>
+   </div>
+
+   <div class="sub"><span class="dot"></span>Bits, bytes and bit depth</div>
+   <ul>
+     <li>A <span class="kw">bit</span> is a single 0 or 1 - the smallest piece of data.</li>
+     <li>8 bits = 1 <span class="kw">byte</span>. 1024 bytes = 1 KB, 1024 KB = 1 MB, and so on.</li>
+     <li><span class="kw">Bit depth</span> is how many bits describe one pixel's colour. More bits = more possible colours and smoother gradients.</li>
+   </ul>
+   <table class="ref">
+     <tr><th>Bit depth</th><th>Levels per channel</th><th>Used for</th></tr>
+     <tr><td><b>1-bit</b></td><td>2 (black or white)</td><td>Line art, bitmap</td></tr>
+     <tr><td><b>8-bit</b></td><td>256</td><td>Standard images (about 16.7M RGB colours)</td></tr>
+     <tr><td><b>16-bit</b></td><td>65,536</td><td>High-quality edits, smooth gradients</td></tr>
+     <tr><td><b>32-bit</b></td><td>Floating point</td><td>HDR, very wide tonal range</td></tr>
+   </table>
+   <div class="def"><b>Why 16.7 million?</b> 8-bit RGB = 256 x 256 x 256 = 16,777,216 colours. Each channel (R, G, B) gets 256 brightness levels.</div>
+
+   <div class="sub"><span class="dot"></span>Channels and colour models</div>
+   <p>A colour image is built from <span class="kw">channels</span>. On screen we mix light: <span class="kw">RGB</span> (Red, Green, Blue) - additive, all three full on = white. For print we mix ink: <span class="kw">CMYK</span> (Cyan, Magenta, Yellow, Key/Black) - subtractive, more ink = darker. There is also <span class="kw">HSB/HSL</span> (Hue, Saturation, Brightness) - a human-friendly way to pick colour, and <span class="kw">Grayscale</span> (one channel of grey).</p>
+   <div class="def"><b>Golden rule:</b> design for screen in RGB, convert to CMYK before sending to a printer. RGB has more colours than CMYK can print, so bright screen colours may dull slightly in print - that is normal.</div>
+
+   <div class="sub"><span class="dot"></span>Resolution - and its many types</div>
+   <table class="ref">
+     <tr><th>Term</th><th>What it measures</th></tr>
+     <tr><td><b>PPI</b> (pixels/inch)</td><td>Image detail on screen or in a file. 300 PPI is the usual print target.</td></tr>
+     <tr><td><b>DPI</b> (dots/inch)</td><td>Printer dots per inch - how fine the print is.</td></tr>
+     <tr><td><b>Pixel dimensions</b></td><td>Screen resolution, e.g. 1920 x 1080 (Full HD), 3840 x 2160 (4K).</td></tr>
+     <tr><td><b>Image resolution</b></td><td>Total pixels in the image (width x height).</td></tr>
+     <tr><td><b>LPI</b> (lines/inch)</td><td>Halftone screen frequency in professional printing.</td></tr>
+   </table>
+   <div class="def"><b>File size feel:</b> more pixels + more bit depth + less compression = heavier file. 72 PPI is screen-era low-res; 150 PPI is okay for large posters viewed from afar; 300 PPI is the safe print standard.</div>
+
+   <div class="sub"><span class="dot"></span>File formats at a glance</div>
+   <table class="ref">
+     <tr><th>Format</th><th>Type</th><th>Best for</th></tr>
+     <tr><td><b>JPEG / JPG</b></td><td>Raster, lossy</td><td>Photos; small size, no transparency</td></tr>
+     <tr><td><b>PNG</b></td><td>Raster, lossless</td><td>Graphics, transparency, screen</td></tr>
+     <tr><td><b>GIF</b></td><td>Raster, 256 colours</td><td>Simple animation, flat graphics</td></tr>
+     <tr><td><b>TIFF</b></td><td>Raster, lossless</td><td>High-quality print, archiving</td></tr>
+     <tr><td><b>SVG</b></td><td>Vector</td><td>Web icons/logos that scale</td></tr>
+     <tr><td><b>PDF</b></td><td>Both</td><td>Sharing, printing, final delivery</td></tr>
+   </table>
+  `,
+  cards:[
+   ['Pixel','The smallest coloured square in a raster image.'],
+   ['Raster','Pixel-based image (photos); loses quality when enlarged.'],
+   ['Vector','Maths-based image (logos); scales with no quality loss.'],
+   ['Bit','A single 0 or 1 - the smallest unit of data.'],
+   ['Byte','8 bits grouped together.'],
+   ['Bit depth','Number of bits per pixel; more bits = more colours.'],
+   ['8-bit colour','256 levels per channel; about 16.7 million RGB colours.'],
+   ['16-bit colour','65,536 levels per channel; smoother gradients for editing.'],
+   ['Channel','A single colour component of an image (e.g. the Red channel).'],
+   ['RGB','Additive light model for screens; R+G+B full = white.'],
+   ['CMYK','Subtractive ink model for print: Cyan, Magenta, Yellow, Black.'],
+   ['HSB / HSL','Hue, Saturation, Brightness - a human-friendly colour picker.'],
+   ['PPI / DPI','Pixels/dots per inch - the detail measure for print (300 common).'],
+   ['Resolution','Amount of detail; pixel dimensions on screen, PPI for print.'],
+   ['Lossy vs lossless','JPEG drops data to shrink size; PNG/TIFF keep all data.'],
+   ['Transparency','Clear areas in an image; supported by PNG and GIF, not JPEG.'],
+   ['Compression','Reducing file size; can be lossy (JPEG) or lossless (PNG).'],
+   ['File size','Grows with more pixels, higher bit depth and less compression.']
+  ],
+  quiz:[
+   {s:'Which image type stays sharp at any size?',o:['Raster','Vector','JPEG','Bitmap'],a:1,e:'Vectors are built from maths, so they scale cleanly. The others are pixel-based.'},
+   {s:'How many colours can an 8-bit RGB image display?',o:['256','65,536','About 16.7 million','Unlimited'],a:2,e:'256 per channel; 256 x 256 x 256 is about 16.7 million.'},
+   {s:'How many bits are in one byte?',o:['4','8','16','1024'],a:1,e:'8 bits make 1 byte.'},
+   {s:'Which colour model is used for printing?',o:['RGB','HSB','CMYK','Grayscale'],a:2,e:'Printers mix Cyan, Magenta, Yellow and Black inks - CMYK (subtractive).'},
+   {s:'In RGB, Red + Green + Blue at full strength makes:',o:['Black','White','Grey','Yellow'],a:1,e:'RGB is additive light; all three full = white.'},
+   {s:'A good resolution target for most print work is:',o:['72 PPI','150 PPI','300 PPI','600 PPI always'],a:2,e:'300 PPI is the standard print target; 72 PPI is screen-era low-res.'},
+   {s:'Which format keeps full quality and supports transparency?',o:['JPEG','PNG','GIF only','BMP'],a:1,e:'PNG is lossless and supports transparency; JPEG is lossy with no transparency.'},
+   {s:'16-bit colour is mainly chosen because it:',o:['Prints faster','Gives smoother gradients and more edit headroom','Removes transparency','Makes files smaller'],a:1,e:'More levels per channel means smoother tones and safer heavy editing.'},
+   {s:'Which is a vector format?',o:['JPEG','TIFF','SVG','GIF'],a:2,e:'SVG is a scalable vector format; the rest are raster.'},
+   {s:'Converting a bright RGB design to CMYK for print may:',o:['Add transparency','Dull some bright colours slightly','Increase resolution','Delete layers'],a:1,e:'CMYK has a smaller colour range, so some vivid screen colours shift a little.'},
+   {s:'DPI refers to:',o:['Pixels on a monitor','Printer dots per inch','Bit depth','Number of layers'],a:1,e:'DPI is dots per inch produced by a printer; PPI is pixels per inch in a file.'}
+  ],
+  exam:{sec:'Appears heavily in Section A (objective) and Section B (applied setup questions).',chips:['Raster vs vector','RGB vs CMYK','Bit depth / 8 vs 16 bit','Resolution types','Right format for the job'],
+   tip:'If a Section B question asks you to pick a file setup for a job, name the colour model (RGB or CMYK), the resolution (PPI), and the file format - and give one reason for each.'},
+  videos:[
+   {id:'15aqFQQVBWU',t:'How computers use binary',by:'Code.org',len:'2:48'},
+   {id:'MELKuexR3sQ',t:'Working with images',by:'GCFLearnFree',len:'4:01'}
+  ],
+  links:[
+   ['GCFGlobal: Computer Basics','Free, plain-language foundations','https://edu.gcfglobal.org/en/computerbasics/',1],
+   ['GCFGlobal: Understanding file types','Raster, vector and when to use each','https://edu.gcfglobal.org/en/using-the-web-to-get-stuff-done/understanding-file-types/1/',1],
+   ['Adobe: RGB vs CMYK explained','Official colour-mode guide','https://www.adobe.com/creativecloud/design/discover/rgb-vs-cmyk.html',0],
+   ['Cambridge in Colour: Bit depth','Deeper, trusted explainer','https://www.cambridgeincolour.com/tutorials/bit-depth.htm',0]
+  ]
+ },
+
+ /* ---------- DESIGN THEORY ---------- */
+ {
+  id:'theory', name:'Design Theory', icon:'&#10022;', accent:'#ffbe2e', tag:'Core ideas',
+  intro:'The principles behind clear, good-looking work: layout, type, colour, composition and branding. Examiners love answers that NAME a principle and explain WHY it works.',
+  learn:`
+   <div class="sub"><span class="dot"></span>Elements vs principles</div>
+   <p><span class="kw">Elements</span> are the building blocks: line, shape, colour, texture, space, form, value (light/dark). <span class="kw">Principles</span> are how you arrange them: <span class="kw">balance, contrast, hierarchy, alignment, repetition, proximity, emphasis, white space</span>.</p>
+   <div class="cmp">
+     <div class="box"><h5>Elements (what you use)</h5><ul><li>Line</li><li>Shape and form</li><li>Colour and value</li><li>Texture</li><li>Space</li></ul></div>
+     <div class="box"><h5>Principles (how you use them)</h5><ul><li>Balance (symmetry/asymmetry)</li><li>Contrast and emphasis</li><li>Hierarchy</li><li>Alignment and proximity</li><li>Repetition and rhythm</li></ul></div>
+   </div>
+   <div class="def"><b>Hierarchy</b> guides the eye - the most important thing should look the most important (bigger, bolder, or set apart with space).</div>
+
+   <div class="sub"><span class="dot"></span>Typography basics</div>
+   <ul>
+     <li><span class="kw">Serif</span> fonts have little feet (traditional, good for long print text). <span class="kw">Sans-serif</span> are clean (modern, great on screen). <span class="kw">Display</span> fonts are decorative, for headlines only.</li>
+     <li><span class="kw">Kerning</span> = space between two specific letters. <span class="kw">Tracking</span> = overall spacing across words. <span class="kw">Leading</span> = space between lines.</li>
+     <li><span class="kw">Hierarchy in type</span>: vary size, weight and colour so a reader instantly sees headline vs body.</li>
+     <li>Readability: limit to 2-3 typefaces, use enough contrast, avoid tiny or over-spaced text.</li>
+   </ul>
+
+   <div class="sub"><span class="dot"></span>Colour theory in practice</div>
+   <p>The <span class="kw">colour wheel</span> explains relationships. <span class="kw">Hue</span> = the colour, <span class="kw">saturation</span> = intensity, <span class="kw">value/brightness</span> = light or dark.</p>
+   <table class="ref">
+     <tr><th>Scheme</th><th>How it is built</th><th>Feel</th></tr>
+     <tr><td><b>Complementary</b></td><td>Opposite colours on the wheel</td><td>High contrast, bold</td></tr>
+     <tr><td><b>Analogous</b></td><td>Neighbours on the wheel</td><td>Harmonious, calm</td></tr>
+     <tr><td><b>Triadic</b></td><td>Three evenly spaced colours</td><td>Vibrant but balanced</td></tr>
+     <tr><td><b>Monochromatic</b></td><td>One hue, many values</td><td>Clean, elegant</td></tr>
+   </table>
+   <div class="def"><b>Colour also carries meaning:</b> red = energy/urgency, blue = trust/calm, green = nature/growth, yellow = optimism. Culture matters, so consider the audience.</div>
+
+   <div class="sub"><span class="dot"></span>Composition and layout</div>
+   <ul>
+     <li><span class="kw">Grids</span> keep things aligned and tidy, and speed up decisions.</li>
+     <li><span class="kw">Rule of thirds</span>: place key elements off-centre on a 3x3 grid for interest.</li>
+     <li><span class="kw">White space</span> (negative space) is not wasted - it gives focus and a premium feel.</li>
+     <li><span class="kw">Visual flow</span>: guide the eye with size, direction and spacing (often a Z or F pattern).</li>
+   </ul>
+
+   <div class="sub"><span class="dot"></span>Branding and identity</div>
+   <p>A <span class="kw">brand identity</span> is the visual system that makes something recognisable: logo, colour palette, typography, imagery style and tone. Consistency across touchpoints builds trust and memory. A <span class="kw">style guide</span> records these rules so everyone stays consistent.</p>
+  `,
+  cards:[
+   ['Element vs principle','Elements are building blocks; principles are how you arrange them.'],
+   ['Hierarchy','Arranging elements so the eye sees the most important thing first.'],
+   ['Contrast','Strong differences (size, colour, weight) that create focus.'],
+   ['Balance','Even visual weight - symmetrical or asymmetrical.'],
+   ['Alignment','Lining elements to a shared edge or grid for a tidy look.'],
+   ['Proximity','Grouping related items close together so they read as one.'],
+   ['Repetition','Reusing elements to create unity and rhythm.'],
+   ['Emphasis','Making one element stand out as the focal point.'],
+   ['Serif vs sans-serif','Serif has small feet (traditional); sans-serif is clean (modern).'],
+   ['Kerning','The space between two specific letters.'],
+   ['Tracking','Overall letter spacing across a word or line.'],
+   ['Leading','The vertical space between lines of text.'],
+   ['Complementary colours','Opposite on the wheel - maximum contrast.'],
+   ['Analogous colours','Neighbours on the wheel - calm and harmonious.'],
+   ['Saturation','The intensity or purity of a colour.'],
+   ['White space','Intentional empty area that gives focus and breathing room.'],
+   ['Rule of thirds','Placing key elements off-centre on a 3x3 grid.'],
+   ['Brand identity','The visual system (logo, colour, type) that makes a brand recognisable.']
+  ],
+  quiz:[
+   {s:'Which principle guides the eye to the most important element first?',o:['Repetition','Hierarchy','Texture','Saturation'],a:1,e:'Hierarchy orders importance using size, weight and placement.'},
+   {s:'The space between two individual letters is called:',o:['Leading','Tracking','Kerning','Padding'],a:2,e:'Kerning is between a pair; tracking is overall; leading is between lines.'},
+   {s:'Colours sitting opposite on the colour wheel are:',o:['Analogous','Triadic','Complementary','Monochromatic'],a:2,e:'Opposite = complementary, which gives the strongest contrast.'},
+   {s:'Sans-serif typefaces are generally described as:',o:['Traditional with feet','Clean and modern','Only for body text','Hard to read'],a:1,e:'Sans-serif has no feet; clean and modern, great on screen.'},
+   {s:'White space in a layout is:',o:['Wasted space','A printing error','Intentional empty space for focus','Only the margins'],a:2,e:'White space is deliberate breathing room that improves focus.'},
+   {s:'Grouping related items close together uses the principle of:',o:['Contrast','Proximity','Rotation','Gradient'],a:1,e:'Proximity makes grouped items read as a single unit.'},
+   {s:'An analogous colour scheme feels:',o:['Jarring','Calm and harmonious','Low quality','Always dark'],a:1,e:'Neighbouring hues sit comfortably together.'},
+   {s:'Blue is commonly associated with:',o:['Urgency','Trust and calm','Danger','Cheapness'],a:1,e:'Blue often signals trust, calm and professionalism.'},
+   {s:'The vertical space between lines of text is:',o:['Kerning','Tracking','Leading','Bleed'],a:2,e:'Leading controls line-to-line spacing and readability.'},
+   {s:'A style guide mainly ensures:',o:['Bigger files','Visual consistency across a brand','Faster printing','More fonts'],a:1,e:'It records rules so every touchpoint looks consistent.'},
+   {s:'Placing a subject off-centre on a 3x3 grid uses the:',o:['Golden file','Rule of thirds','Bleed rule','CMYK rule'],a:1,e:'The rule of thirds adds interest and balance.'}
+  ],
+  exam:{sec:'Spread across Section A (terms) and Section B (explain why a design works).',chips:['Elements vs principles','Typography terms','Colour schemes','Explain a good layout','Branding and consistency'],
+   tip:'In Section B, do not just name the principle - say what it does for the viewer. Example: "Contrast makes the title stand out so the reader knows where to start."'},
+  videos:[
+   {id:'YqQx75OPRa0',t:'Fundamentals of design',by:'GCFLearnFree',len:'4:35'},
+   {id:'_2LLXnUdUIc',t:'Understanding colour',by:'GCFLearnFree',len:'5:09'},
+   {id:'sByzHoiYFX0',t:'Typography basics',by:'GCFLearnFree',len:'4:47'},
+   {id:'a5KYlHNKQB8',t:'Layout and composition',by:'GCFLearnFree',len:'5:12'},
+   {id:'BQyNgcCEAM8',t:'Composition in art and design',by:'GCFLearnFree',len:'5:29'},
+   {id:'l-S2Y3SF3mM',t:'Branding and identity',by:'GCFLearnFree',len:'4:58'}
+  ],
+  links:[
+   ['GCFGlobal: Beginning Graphic Design','Full free course - all the basics','https://edu.gcfglobal.org/en/beginning-graphic-design/',1],
+   ['Adobe Color','Build and test colour schemes live','https://color.adobe.com/create/color-wheel',0],
+   ['Butterick: Practical Typography','Free, respected typography book','https://practicaltypography.com/',0],
+   ['Interaction Design Foundation','Trusted design theory articles','https://www.interaction-design.org/literature',0],
+   ['Canva: Design School','Friendly tutorials on layout and colour','https://www.canva.com/learn/',0],
+   ['Material Design: Foundations','Google design system principles','https://m3.material.io/foundations',0]
+  ]
+ },
+
+ /* ---------- PHOTOSHOP ---------- */
+ {
+  id:'ps', name:'Photoshop', icon:'&#9632;', accent:'#ff5a3c', tag:'Raster / photo',
+  intro:'Photoshop is the pixel studio: editing photos, retouching, compositing and making screen graphics. The mental model is "raster + layers + selections + masks, kept non-destructive".',
+  learn:`
+   <div class="sub"><span class="dot"></span>What Photoshop is for</div>
+   <p>Photo editing, retouching, compositing (combining images), colour correction, digital painting and web/social graphics. It works on <span class="kw">pixels</span>, so set your document size, resolution and colour mode before you start.</p>
+
+   <div class="sub"><span class="dot"></span>Layers - the heart of it</div>
+   <ul>
+     <li><span class="kw">Layers</span> stack like clear sheets, so you can edit one part without touching the rest.</li>
+     <li><span class="kw">Adjustment layers</span> change colour/tone non-destructively (Levels, Curves, Hue/Saturation) - toggle or re-edit any time.</li>
+     <li><span class="kw">Blending modes</span> change how a layer mixes with those below (Multiply darkens, Screen lightens, Overlay adds contrast).</li>
+     <li><span class="kw">Opacity</span> controls how see-through a layer is.</li>
+   </ul>
+
+   <div class="sub"><span class="dot"></span>Selections and masks</div>
+   <ul>
+     <li><span class="kw">Selections</span> isolate an area: Marquee (shapes), Lasso (freehand), Quick Selection and Object Selection (smart), Select Subject, Colour Range.</li>
+     <li>A <span class="kw">layer mask</span> hides or reveals parts of a layer using <b>black = hide, white = reveal</b> - fully editable, nothing is deleted.</li>
+     <li>A <span class="kw">clipping mask</span> shows one layer only inside the shape of the layer below.</li>
+     <li><span class="kw">Non-destructive editing</span> keeps the original safe: masks, adjustment layers and Smart Objects instead of erasing or flattening.</li>
+   </ul>
+   <div class="def"><b>Smart Object:</b> a layer that remembers the original data, so you can resize or re-edit repeatedly without losing quality. Smart Filters apply effects you can turn off later.</div>
+
+   <div class="sub"><span class="dot"></span>Common retouch and fix tools</div>
+   <table class="ref">
+     <tr><th>Tool</th><th>Does</th></tr>
+     <tr><td><b>Clone Stamp</b></td><td>Copies pixels from one spot to another</td></tr>
+     <tr><td><b>Healing Brush / Spot Healing</b></td><td>Removes blemishes by blending surrounding texture</td></tr>
+     <tr><td><b>Crop</b></td><td>Trims and recomposes the frame</td></tr>
+     <tr><td><b>Dodge / Burn</b></td><td>Lightens / darkens local areas</td></tr>
+     <tr><td><b>Content-Aware Fill</b></td><td>Removes objects by filling intelligently</td></tr>
+   </table>
+
+   <div class="sub"><span class="dot"></span>Saving and exporting</div>
+   <p>Keep the editable master as <span class="kw">.PSD</span>. Export flat images: JPEG (photos), PNG (transparency/graphics), TIFF (print), or PDF. Set the colour mode correctly: <span class="kw">RGB</span> for screen, <span class="kw">CMYK</span> for print.</p>
+  `,
+  cards:[
+   ['Layer','A stackable, independently editable sheet of your image.'],
+   ['Layer mask','Black hides, white reveals - change visibility without deleting.'],
+   ['Clipping mask','Shows a layer only inside the shape of the layer below.'],
+   ['Adjustment layer','Non-destructive colour/tone change you can toggle or re-edit.'],
+   ['Blending mode','Controls how a layer mixes with those below (Multiply, Screen...).'],
+   ['Opacity','How see-through a layer is.'],
+   ['Smart Object','Layer that preserves original data for lossless re-editing.'],
+   ['Smart Filter','A filter applied non-destructively to a Smart Object.'],
+   ['Selection','An isolated area so edits only affect that region.'],
+   ['Select Subject','Auto-selects the main subject in one click.'],
+   ['Clone Stamp','Copies pixels from one area to another.'],
+   ['Healing Brush','Removes blemishes by blending nearby texture.'],
+   ['Content-Aware Fill','Removes objects by intelligently filling the gap.'],
+   ['Dodge and Burn','Lighten (dodge) or darken (burn) local areas.'],
+   ['Non-destructive editing','Editing that keeps the original pixels safe.'],
+   ['PSD','Photoshop master file that keeps all layers editable.'],
+   ['Rasterize','Converting a smart/vector layer into plain pixels.'],
+   ['Colour mode','RGB for screen, CMYK for print, set per document.']
+  ],
+  quiz:[
+   {s:'Which tool hides or reveals part of a layer without deleting pixels?',o:['Eraser','Layer mask','Crop','Clone stamp'],a:1,e:'A layer mask uses black/white to hide/reveal and stays fully editable.'},
+   {s:'Adjustment layers are valued because they are:',o:['Permanent','Non-destructive','Vector-based','Only for text'],a:1,e:'They change colour/tone without altering the original pixels.'},
+   {s:'To keep every layer editable, save the master as:',o:['JPEG','PNG','PSD','GIF'],a:2,e:'PSD preserves layers, masks and Smart Objects.'},
+   {s:'A Smart Object mainly helps you:',o:['Add text faster','Resize/re-edit without quality loss','Print in CMYK','Record actions'],a:1,e:'It stores source data so transforms stay non-destructive.'},
+   {s:'For a photo going on a website you should work in:',o:['CMYK','RGB','Grayscale only','Lab only'],a:1,e:'Screens display in RGB; use CMYK only for print.'},
+   {s:'The Multiply blending mode generally:',o:['Lightens','Darkens','Inverts','Adds noise'],a:1,e:'Multiply darkens by multiplying tones; Screen lightens.'},
+   {s:'To remove a small blemish you would use the:',o:['Pen tool','Healing brush','Gradient tool','Type tool'],a:1,e:'The healing brush blends surrounding texture over the flaw.'},
+   {s:'A clipping mask shows a layer:',o:['Everywhere','Only inside the shape below it','Only in black','Only when printed'],a:1,e:'The lower layer acts as the visible window for the upper one.'},
+   {s:'Opacity controls a layer\'s:',o:['Size','Transparency','Resolution','File format'],a:1,e:'Opacity sets how see-through the layer is.'},
+   {s:'Content-Aware Fill is used to:',o:['Add text','Remove objects by smart filling','Export PDF','Change fonts'],a:1,e:'It analyses surroundings and fills the removed area believably.'},
+   {s:'Rasterizing a layer means:',o:['Making it vector','Turning it into plain pixels','Adding a mask','Grouping it'],a:1,e:'Rasterizing converts editable/vector content into fixed pixels.'}
+  ],
+  exam:{sec:'Strong in Section A (terms) and Section C (plan a photo/composite task in writing).',chips:['Layers and masks','Non-destructive editing','Selections','Compositing plan','RGB vs CMYK export'],
+   tip:'Section C asks you to WRITE the plan/steps, not do it on a computer. State tool choices AND why: "I would use a layer mask rather than the eraser so the edit stays reversible."'},
+  videos:[
+   {id:'fE1_nHllIp8',t:'Layer masks explained in 7 minutes',by:'PiXimperfect',len:'7:30'},
+   {id:'MwFe_t5C8U0',t:'Layers and masks masterclass',by:'Nicolesy',len:'6h+'},
+   {id:'MELKuexR3sQ',t:'Working with images',by:'GCFLearnFree',len:'4:01'}
+  ],
+  links:[
+   ['Adobe: Get started with Photoshop','Official beginner tutorial series','https://helpx.adobe.com/photoshop/tutorials.html',1],
+   ['Adobe: Photoshop user guide','Searchable official reference','https://helpx.adobe.com/photoshop/user-guide.html',0],
+   ['GCFGlobal: Photoshop Basics','Free step-by-step lessons','https://edu.gcfglobal.org/en/photoshopbasics/',1],
+   ['Adobe: Non-destructive editing','Official how-to on safe editing','https://helpx.adobe.com/photoshop/using/nondestructive-editing.html',0]
+  ]
+ },
+
+ /* ---------- ILLUSTRATOR ---------- */
+ {
+  id:'ai', name:'Illustrator', icon:'&#9650;', accent:'#ff3d87', tag:'Vector / logo',
+  intro:'Illustrator is the vector studio: logos, icons, illustrations and anything that must scale cleanly. The mental model is "paths + anchor points + fills and strokes".',
+  learn:`
+   <div class="sub"><span class="dot"></span>What Illustrator is for</div>
+   <p>Logos, icons, typography art, infographics and illustrations. Because artwork is <span class="kw">vector</span>, it scales to any size with no blur - the same logo works on a business card and a billboard.</p>
+
+   <div class="sub"><span class="dot"></span>Paths, points and the Pen</div>
+   <ul>
+     <li>A <span class="kw">path</span> is a line or shape made of <span class="kw">anchor points</span> joined by segments.</li>
+     <li>The <span class="kw">Pen tool</span> places anchor points to draw precise straight lines and curves; <span class="kw">handles</span> control the curve.</li>
+     <li><span class="kw">Anchor points</span> can be corner (sharp) or smooth (curved).</li>
+     <li>Each object has a <span class="kw">fill</span> (inside colour) and a <span class="kw">stroke</span> (outline, with adjustable weight).</li>
+   </ul>
+
+   <div class="sub"><span class="dot"></span>Building and combining shapes</div>
+   <ul>
+     <li><span class="kw">Pathfinder</span> combines or cuts shapes: Unite, Minus Front, Intersect, Divide.</li>
+     <li><span class="kw">Shape Builder</span> merges or subtracts shapes by dragging across them.</li>
+     <li>Keep related parts in <span class="kw">groups</span> and <span class="kw">layers</span> so artwork stays organised.</li>
+     <li><span class="kw">Align</span> and <span class="kw">Distribute</span> keep spacing even - vital for icon sets.</li>
+   </ul>
+
+   <div class="sub"><span class="dot"></span>Type, colour and consistency</div>
+   <ul>
+     <li>Turn text into shapes with <span class="kw">Create Outlines</span> so the font is not needed on another computer.</li>
+     <li>Use <span class="kw">global swatches</span> and <span class="kw">colour groups</span> for consistent, easy-to-update colour.</li>
+     <li>Set the document to <span class="kw">CMYK</span> for print, <span class="kw">RGB</span> for screen.</li>
+     <li><span class="kw">Artboards</span> let you hold several designs (logo variations, icon set) in one file.</li>
+   </ul>
+   <div class="def"><b>Save editable as .AI</b>; share scalable vector as <b>SVG</b> or <b>PDF</b>; export raster previews as PNG/JPEG. For a logo, deliver AI (master), SVG (web) and PNG (quick use).</div>
+  `,
+  cards:[
+   ['Path','A line or shape made of anchor points and segments.'],
+   ['Anchor point','A point that defines where a path bends or ends.'],
+   ['Handle','A control that shapes the curve at an anchor point.'],
+   ['Pen tool','Places anchor points to draw precise lines and curves.'],
+   ['Fill and stroke','Fill is the inside colour; stroke is the outline.'],
+   ['Stroke weight','The thickness of a path outline.'],
+   ['Pathfinder','Combines or subtracts shapes (Unite, Minus Front...).'],
+   ['Shape Builder','Merges or cuts shapes by dragging across them.'],
+   ['Align / Distribute','Keeps objects evenly spaced and lined up.'],
+   ['Create Outlines','Turns live text into vector shapes so the font is not needed.'],
+   ['Global swatch','A saved colour that updates everywhere when changed.'],
+   ['Artboard','A canvas; a file can hold several for variations/sets.'],
+   ['Group','Objects joined so they move and edit together.'],
+   ['Clipping mask','Uses a shape to crop artwork to that shape.'],
+   ['Vector','Maths-based artwork that scales with no quality loss.'],
+   ['AI','The editable Illustrator master file.'],
+   ['SVG','A scalable vector format ideal for the web.'],
+   ['EPS','A vector format for exchange and some print workflows.']
+  ],
+  quiz:[
+   {s:'Illustrator is best for work that must:',o:['Edit photos','Scale with no quality loss','Composite images','Record macros'],a:1,e:'Vector artwork scales cleanly - ideal for logos and icons.'},
+   {s:'The tool used to draw precise custom paths is the:',o:['Brush','Pen','Lasso','Crop'],a:1,e:'The Pen tool places anchor points for exact lines and curves.'},
+   {s:'Create Outlines is used to:',o:['Add a stroke','Turn text into vector shapes','Change resolution','Group layers'],a:1,e:'It converts live type to paths so the font is not required elsewhere.'},
+   {s:'To cut or combine shapes you would use:',o:['Pathfinder','Curves','Levels','Channels'],a:0,e:'Pathfinder (and Shape Builder) unite, subtract and intersect shapes.'},
+   {s:'The editable Illustrator master file is:',o:['.PSD','.AI','.JPG','.INDD'],a:1,e:'.AI keeps paths editable; .PSD is Photoshop, .INDD is InDesign.'},
+   {s:'The outline of a vector object is its:',o:['Fill','Stroke','Mask','Channel'],a:1,e:'Stroke is the outline; fill is the inside colour.'},
+   {s:'To keep six icons evenly spaced you would use:',o:['Align and Distribute','Curves','Dodge','Content-Aware'],a:0,e:'Align/Distribute gives consistent spacing across a set.'},
+   {s:'A global swatch is useful because:',o:['It locks the file','Changing it updates the colour everywhere','It adds pixels','It prints faster'],a:1,e:'Edit the swatch once and every object using it updates.'},
+   {s:'Multiple logo variations can live in one file using:',o:['Channels','Artboards','Layer masks','Smart Objects'],a:1,e:'Artboards hold several designs side by side in one document.'},
+   {s:'For a web icon that must scale, export as:',o:['JPEG','SVG','TIFF','BMP'],a:1,e:'SVG is vector and scales perfectly on the web.'},
+   {s:'Handles on an anchor point control the:',o:['Colour','Curve shape','File size','Layer order'],a:1,e:'Dragging handles changes the curvature of the path.'}
+  ],
+  exam:{sec:'Section A (terms) and Section C (plan an icon set / logo / illustration in writing).',chips:['Paths and anchor points','Pen tool','Pathfinder','Create Outlines','Scalability'],
+   tip:'For a Section C icon-set task, write about CONSISTENCY: same grid, stroke weight, corner style and colour across all icons - and why that makes a set feel unified.'},
+  videos:[
+   {id:'Rk-JGsriJ4o',t:'How to use the Pen tool',by:'Illustrator tutorial',len:'15:00'},
+   {id:'l-S2Y3SF3mM',t:'Branding and identity',by:'GCFLearnFree',len:'4:58'},
+   {id:'BQyNgcCEAM8',t:'Composition and arrangement',by:'GCFLearnFree',len:'5:29'}
+  ],
+  links:[
+   ['Adobe: Get started with Illustrator','Official beginner tutorial series','https://helpx.adobe.com/illustrator/tutorials.html',1],
+   ['Adobe: Illustrator user guide','Searchable official reference','https://helpx.adobe.com/illustrator/user-guide.html',0],
+   ['Adobe: Draw with the Pen tool','Official pen-tool how-to','https://helpx.adobe.com/illustrator/using/drawing-pen-tool.html',0],
+   ['The Bezier Game','Fun practice to master the Pen tool','https://bezier.method.ac/',0]
+  ]
+ },
+
+ /* ---------- INDESIGN ---------- */
+ {
+  id:'id', name:'InDesign', icon:'&#9644;', accent:'#49d888', tag:'Layout / print',
+  intro:'InDesign is the layout studio: multi-page documents like magazines, brochures, booklets and zines. The mental model is "frames + master pages + flowing text + styles".',
+  learn:`
+   <div class="sub"><span class="dot"></span>What InDesign is for</div>
+   <p>Page layout for anything with structure and multiple pages: magazines, brochures, booklets, zines, reports and books. You bring in text and images from elsewhere and arrange them beautifully and consistently.</p>
+
+   <div class="sub"><span class="dot"></span>Frames, text flow and columns</div>
+   <ul>
+     <li>Everything sits inside a <span class="kw">frame</span> - a text frame or a graphic frame.</li>
+     <li><span class="kw">Place</span> (not paste) imports text and images so they stay linked and high quality.</li>
+     <li><span class="kw">Threading</span> links text frames so a story flows from one to the next and across pages.</li>
+     <li><span class="kw">Columns, guides and the baseline grid</span> keep the layout aligned and readable.</li>
+   </ul>
+
+   <div class="sub"><span class="dot"></span>Master pages and styles</div>
+   <ul>
+     <li><span class="kw">Master pages</span> (now called Parent pages) hold repeating items - page numbers, headers, margins - that appear on every page automatically.</li>
+     <li><span class="kw">Paragraph styles</span> and <span class="kw">character styles</span> let you format once and apply everywhere, so the whole document stays consistent and quick to update.</li>
+     <li><span class="kw">Object styles</span> do the same for frames and boxes.</li>
+   </ul>
+   <div class="def"><b>Why styles matter:</b> change the paragraph style once and every heading updates instantly across all pages. Markers reward this because it shows professional, efficient thinking.</div>
+
+   <div class="sub"><span class="dot"></span>Getting it print-ready</div>
+   <ul>
+     <li><span class="kw">Bleed</span>: extend artwork past the trim edge (usually 3 mm) so there are no white slivers after cutting.</li>
+     <li><span class="kw">Margins and safe area</span>: keep important content away from the trim.</li>
+     <li>Check the <span class="kw">Links</span> panel so no image is missing or low-res.</li>
+     <li><span class="kw">Preflight</span> catches errors before export.</li>
+     <li>Export a <span class="kw">print PDF (PDF/X)</span> in CMYK with crop marks, or an interactive PDF for screen.</li>
+   </ul>
+   <div class="def"><b>INDD</b> is the editable master. <b>IDML</b> is a backward-compatible version. <b>Package</b> gathers the file, fonts and links into one folder for the printer.</div>
+  `,
+  cards:[
+   ['Frame','A container for text or a graphic - everything lives in a frame.'],
+   ['Place','Importing text/images so they stay linked and high quality.'],
+   ['Threading','Linking text frames so a story flows between them.'],
+   ['Master / Parent page','A template page holding repeating items like page numbers.'],
+   ['Paragraph style','A saved set of text formatting applied in one click.'],
+   ['Character style','Formatting for selected characters (e.g. bold terms).'],
+   ['Object style','Saved formatting for frames and boxes.'],
+   ['Baseline grid','Guides that line text up neatly across columns.'],
+   ['Columns and guides','Structure that keeps the layout aligned and readable.'],
+   ['Bleed','Artwork extended past the trim edge (about 3 mm) for clean cuts.'],
+   ['Margins','Space inside the trim that keeps content safe.'],
+   ['Links panel','Shows placed images and warns if any are missing/low-res.'],
+   ['Preflight','A check that catches errors before export.'],
+   ['Package','Gathers file, fonts and links into one folder for the printer.'],
+   ['INDD','The editable InDesign layout file.'],
+   ['IDML','A backward-compatible InDesign file format.'],
+   ['Print PDF (PDF/X)','Export preset for reliable professional printing.'],
+   ['Spread','Two facing pages seen together (like an open magazine).']
+  ],
+  quiz:[
+   {s:'InDesign is the best choice for:',o:['Editing a single photo','A multi-page magazine layout','Drawing a vector logo','Recording video'],a:1,e:'InDesign is built for multi-page, structured layout.'},
+   {s:'Repeating page numbers and headers are best placed on:',o:['Every page by hand','A master (parent) page','A separate file','The pasteboard'],a:1,e:'Master pages apply repeating elements automatically to all pages.'},
+   {s:'Linking text frames so a story flows between them is called:',o:['Threading','Kerning','Bleeding','Masking'],a:0,e:'Threading flows text from frame to frame and across pages.'},
+   {s:'Bleed is added so that:',o:['Text is bigger','No white edges appear after trimming','Files are smaller','Colours are brighter'],a:1,e:'Bleed extends art past the trim so cutting leaves no white slivers.'},
+   {s:'To format text consistently across a document you use:',o:['Manual formatting','Paragraph styles','Layer masks','Pathfinder'],a:1,e:'Paragraph/character styles format once and update everywhere.'},
+   {s:'Importing an image correctly in InDesign uses:',o:['Paste','Place','Rasterize','Trace'],a:1,e:'Place keeps the image linked and at full quality.'},
+   {s:'Two facing pages seen together form a:',o:['Spread','Swatch','Stroke','Style'],a:0,e:'A spread is the pair of facing pages, like an open magazine.'},
+   {s:'Before sending to a printer you should run:',o:['A filter','Preflight','Content-Aware Fill','Create Outlines'],a:1,e:'Preflight catches missing links, low-res images and other errors.'},
+   {s:'Package is used to:',o:['Compress photos','Gather file, fonts and links together','Add bleed','Change colour mode'],a:1,e:'Package collects everything the printer needs in one folder.'},
+   {s:'The editable InDesign master file is:',o:['.AI','.PSD','.INDD','.JPG'],a:2,e:'.INDD is the native InDesign layout file.'},
+   {s:'The Links panel warns you when:',o:['A font is bold','An image is missing or low-res','Text is too small','A colour is CMYK'],a:1,e:'It flags broken or low-resolution placed images before print.'}
+  ],
+  exam:{sec:'Section A (terms) and Section C (plan a magazine / brochure / zine in writing).',chips:['Frames and threading','Master/parent pages','Paragraph styles','Bleed and margins','Preflight and export'],
+   tip:'For a Section C layout task, mention master pages and paragraph styles explicitly - they show you understand consistency and efficiency, which examiners reward.'},
+  videos:[
+   {id:'BuE8JpajmgY',t:'InDesign full course (7+ hours)',by:'Learnit',len:'7h+'},
+   {id:'p8E3_ZlBN0A',t:'Master / Parent pages explained',by:'InDesign tutorial',len:'10:00'},
+   {id:'a5KYlHNKQB8',t:'Layout and composition',by:'GCFLearnFree',len:'5:12'}
+  ],
+  links:[
+   ['Adobe: Get started with InDesign','Official beginner tutorial series','https://helpx.adobe.com/indesign/tutorials.html',1],
+   ['Adobe: InDesign user guide','Searchable official reference','https://helpx.adobe.com/indesign/user-guide.html',0],
+   ['Adobe: Create a book or magazine','Official multi-page how-to','https://helpx.adobe.com/indesign/using/create-book-files.html',0],
+   ['GCFGlobal: Layout and composition','Layout principles in practice','https://edu.gcfglobal.org/en/beginning-graphic-design/layout-and-composition/1/',1]
+  ]
+ },
+
+ /* ---------- EXAM PREP ---------- */
+ {
+  id:'exam', name:'Exam Prep', icon:'&#9733;', accent:'#9a7bff', tag:'The paper',
+  intro:'How the paper is built, how to answer each part, and a calm timing plan. Read this once near the end - it ties everything together and settles the nerves.',
+  learn:`
+   <div class="sub"><span class="dot"></span>How the paper is structured</div>
+   <ul>
+     <li><span class="kw">Section A - Objective.</span> Short recall questions: terms and facts (raster vs vector, RGB/CMYK, tool names, bit depth). Quick wins - do these first and bank the marks.</li>
+     <li><span class="kw">Section B - Applied / scenario.</span> You explain a choice or why something works. Always give the term PLUS the reason.</li>
+     <li><span class="kw">Section C - Design task.</span> You WRITE the plan and steps for a real job (a poster, an icon set, a magazine). You are not doing it on a computer - you are describing your approach clearly and in order.</li>
+   </ul>
+   <div class="def"><b>Golden structure for every Section C answer:</b> (1) the brief in one line, (2) your software choice and why, (3) your step-by-step workflow, (4) the export/finishing - colour mode, resolution, bleed, file type.</div>
+
+   <div class="sub"><span class="dot"></span>Simple timing plan (3 hours)</div>
+   <table class="ref">
+     <tr><th>Part</th><th>Rough time</th><th>Approach</th></tr>
+     <tr><td><b>Section A</b></td><td>30-40 min</td><td>Fast, do not overthink. Skip and return if stuck.</td></tr>
+     <tr><td><b>Section B</b></td><td>45-60 min</td><td>One clear term + one clear reason each.</td></tr>
+     <tr><td><b>Section C</b></td><td>Remaining time</td><td>Plan first, then write in numbered steps.</td></tr>
+     <tr><td><b>Review</b></td><td>Last 10 min</td><td>Re-read, fill blanks, check spelling of terms.</td></tr>
+   </table>
+
+   <div class="sub"><span class="dot"></span>Answer-writing tips that earn marks</div>
+   <ul>
+     <li>Use the exact vocabulary (non-destructive, bleed, master page, vector) - it signals understanding.</li>
+     <li>Always say the WHY, not just the what.</li>
+     <li>For design tasks, name the right app for the job and justify it.</li>
+     <li>Use headings or numbered steps - markers can find your points quickly.</li>
+     <li>Never leave a blank. Partial answers still earn marks.</li>
+   </ul>
+
+   <div class="sub"><span class="dot"></span>Little confidence boosters</div>
+   <p>You have flipped the cards and done the quizzes - that knowledge is in there. Answer what you know first, keep sentences short, and always add the reason. Calm beats cramming. You have got this.</p>
+  `,
+  cards:[
+   ['Section A','Objective recall - terms, facts, tool names. Quick marks.'],
+   ['Section B','Applied reasoning - name the term AND the reason.'],
+   ['Section C','Write the plan/steps for a design task - not done on a computer.'],
+   ['Golden structure','Brief, software choice + why, workflow steps, export/finishing.'],
+   ['Say the why','Always explain the reason, not just the term.'],
+   ['Use the vocabulary','Exact terms signal understanding and earn marks.'],
+   ['Timing','Bank Section A fast, then invest in B and C.'],
+   ['Never blank','Partial answers still earn marks - always attempt.'],
+   ['Review window','Save 10 minutes to re-read and fix blanks.']
+  ],
+  quiz:[
+   {s:'In Section C you are expected to:',o:['Build the artwork on a laptop','Write the plan and steps in words','Only draw sketches','Skip if unsure'],a:1,e:'Section C is written - you describe your approach, tools and reasons.'},
+   {s:'The best shape for a Section B answer is:',o:['Just the term','Just an opinion','The term plus the reason it works','A long story'],a:2,e:'Name the principle/tool and explain what it does for the result.'},
+   {s:'A smart finishing line for a print-task plan is:',o:['"Save as JPEG, RGB"','"Export print PDF in CMYK with 3 mm bleed"','"Email the PSD"','"Lower the resolution"'],a:1,e:'Print needs CMYK, correct resolution, bleed and a print-ready PDF.'},
+   {s:'Best use of your first 30 minutes:',o:['Longest Section C answer','Section A quick objective marks','Re-reading the rules','Decorating the page'],a:1,e:'Bank the fast objective marks first, then invest time in B and C.'},
+   {s:'Using exact terms like "non-destructive" in an answer:',o:['Wastes words','Signals understanding and earns marks','Is only for Section A','Should be avoided'],a:1,e:'Precise vocabulary shows the marker you understand the concept.'},
+   {s:'If you get stuck on a question you should:',o:['Leave it blank','Give up on the section','Skip, answer others, and return','Rewrite the question'],a:2,e:'Move on, bank easier marks, then come back with a clearer head.'},
+   {s:'For a design-task answer, the first line should be:',o:['The export settings','The brief in one line','A drawing','Your name'],a:1,e:'State the brief first, then tools, steps and finishing.'},
+   {s:'The safest rule when unsure of an answer is:',o:['Leave blank','Attempt it - partial marks count','Repeat the question','Write only one word'],a:1,e:'An attempt can still score; a blank never does.'}
+  ],
+  exam:{sec:'This whole tab is your exam map - revisit it the night before.',chips:['Know the 3 sections','Term + reason','Write Section C plans','Manage your time','Attempt everything'],
+   tip:'Screenshot the "golden structure" card for Section C and keep it in your head: brief, choice + why, steps, finishing.'},
+  videos:[
+   {id:'dIJxxFKPW-k',t:'Seeing design everywhere',by:'GCFLearnFree',len:'3:46'}
+  ],
+  links:[
+   ['Adobe: Creative Cloud tutorials hub','All three apps, official','https://helpx.adobe.com/creative-cloud/tutorials-explore.html',0],
+   ['GCFGlobal: Beginning Graphic Design','Revise all theory fast','https://edu.gcfglobal.org/en/beginning-graphic-design/',1],
+   ['Adobe Color','Quick colour-scheme practice','https://color.adobe.com/create/color-wheel',0]
+  ]
+ }
+];
+
+/* Section C worked walkthroughs */
+const WALK = [
+ {t:'A4 cultural festival poster (print)', acc:'#ff5a3c', steps:[
+   ['Read the brief','Note the size (A4), audience (festival-goers), must-haves (title, date, venue). One line is enough.'],
+   ['Choose tools and why','Illustrator or InDesign for crisp type and layout; Photoshop only if a photo needs treatment. Set the document to CMYK, 300 PPI, with 3 mm bleed.'],
+   ['Build the layout','Use a grid. Strong hierarchy: festival name largest, then date/venue, then details. Pick a palette that fits the mood; limit to 2-3 typefaces.'],
+   ['Add imagery','Place a treated photo or vector artwork. Keep contrast high so text stays readable over it.'],
+   ['Finish for print','Check margins and image resolution, add bleed, run preflight, export a print PDF (PDF/X) in CMYK with crop marks.']
+ ]},
+ {t:'Set of six flat vector icons', acc:'#ff3d87', steps:[
+   ['Read the brief','Six icons, one theme, must look like a family.'],
+   ['Choose tools and why','Illustrator - vectors scale cleanly and stay sharp at any size.'],
+   ['Set shared rules','Same grid size, stroke weight, corner radius and colour for all six. This consistency is what makes a SET.'],
+   ['Draw with Pen/shapes','Build each icon from simple shapes; use Pathfinder to combine; Align to keep spacing even. One icon per layer/group.'],
+   ['Deliver','Create Outlines if needed, export SVG/PDF for scalable use and PNG for previews.']
+ ]},
+ {t:'Twelve-page magazine / zine (layout)', acc:'#49d888', steps:[
+   ['Read the brief','12 pages, consistent and readable, mix of text and images.'],
+   ['Choose tools and why','InDesign - built for multi-page layout with flowing text.'],
+   ['Set the skeleton','Master/parent pages for page numbers and headers; set margins, columns and a baseline grid.'],
+   ['Style the content','Paragraph and character styles for headings and body so formatting is consistent and fast to change. Thread text frames so stories flow.'],
+   ['Finish','Place (not paste) images, check the Links panel, add bleed, preflight, export a print PDF.']
+ ]},
+ {t:'Photo composite / product retouch (Photoshop)', acc:'#1fe3c6', steps:[
+   ['Read the brief','What must be combined or fixed, and where it will be used (screen or print).'],
+   ['Choose tools and why','Photoshop - pixel editing, layers and masks for compositing. RGB for screen, CMYK for print.'],
+   ['Work non-destructively','Use selections (Select Subject), layer masks to blend, and adjustment layers for colour - nothing erased.'],
+   ['Match and blend','Match lighting and colour across elements; use blending modes and masks for believable edges.'],
+   ['Deliver','Keep the layered PSD master; export JPEG/PNG for screen or a print-ready file for print.']
+ ]}
+];
+
+/* ================= SVG ASSETS ================= */
+const I=(p,f)=>`<svg viewBox="0 0 24 24" fill="${f?'currentColor':'none'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
+const ICONS={
+  star:I('<polygon points="12 2 15 9 22 9 16.5 13.5 18.5 21 12 16.5 5.5 21 7.5 13.5 2 9 9 9"/>'),
+  pencil:I('<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/>'),
+  cards:I('<rect x="3" y="4" width="13" height="16" rx="2"/><path d="M8 4h11a2 2 0 0 1 2 2v12"/>'),
+  check:I('<path d="M4 12l5 5L20 6"/>'),
+  play:I('<polygon points="6 4 20 12 6 20 6 4"/>',true),
+  globe:I('<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/>'),
+  book:I('<path d="M4 5a2 2 0 0 1 2-2h12v18H6a2 2 0 0 1-2-2Z"/><path d="M8 7h7M8 11h7"/>')
+};
+const HEROSVG={
+  fund:`<svg viewBox="0 0 200 150"><g class="pop">
+    <rect x="18" y="20" width="110" height="80" rx="6" fill="#0c2b2b" stroke="#1fe3c6" stroke-width="2"/>
+    ${[0,1,2,3,4].map(r=>[0,1,2,3,4,5].map(c=>`<rect x="${24+c*17}" y="${26+r*14}" width="15" height="12" rx="2" fill="${['#ff5a3c','#ffbe2e','#49d888','#1fe3c6','#ff3d87','#9a7bff'][(r+c)%6]}" opacity="${0.35+((r*c)%3)*0.2}"/>`).join('')).join('')}
+    <circle cx="150" cy="45" r="20" fill="#ff5a3c" opacity=".85"/>
+    <circle cx="165" cy="60" r="20" fill="#49d888" opacity=".7" style="mix-blend-mode:screen"/>
+    <circle cx="150" cy="72" r="20" fill="#3d7bff" opacity=".7" style="mix-blend-mode:screen"/>
+    <text x="70" y="128" fill="#1fe3c6" font-size="13" font-weight="700" text-anchor="middle">01011</text>
+  </g></svg>`,
+  theory:`<svg viewBox="0 0 200 150"><g class="pop">
+    ${Array.from({length:8}).map((_,i)=>{const a=i*45*Math.PI/180,a2=(i+1)*45*Math.PI/180,cx=70,cy=70,r=46;const x1=cx+r*Math.cos(a),y1=cy+r*Math.sin(a),x2=cx+r*Math.cos(a2),y2=cy+r*Math.sin(a2);return `<path d="M${cx} ${cy} L${x1} ${y1} A${r} ${r} 0 0 1 ${x2} ${y2} Z" fill="${['#ff5a3c','#ff8a3c','#ffbe2e','#49d888','#1fe3c6','#3d9bff','#9a7bff','#ff3d87'][i]}"/>`}).join('')}
+    <circle cx="70" cy="70" r="20" fill="#15101d"/>
+    <text x="70" y="78" fill="#fff" font-size="22" font-weight="800" text-anchor="middle">Aa</text>
+    <rect x="128" y="40" width="58" height="9" rx="4" fill="#ffbe2e"/><rect x="128" y="58" width="48" height="7" rx="3" fill="#b4a6c8"/><rect x="128" y="72" width="54" height="7" rx="3" fill="#b4a6c8"/><rect x="128" y="86" width="40" height="7" rx="3" fill="#b4a6c8"/>
+  </g></svg>`,
+  ps:`<svg viewBox="0 0 200 150"><g class="pop">
+    <rect x="34" y="78" width="120" height="46" rx="7" fill="#ff5a3c" opacity=".55" transform="skewX(-12)"/>
+    <rect x="44" y="56" width="120" height="46" rx="7" fill="#ff3d87" opacity=".7" transform="skewX(-12)"/>
+    <rect x="54" y="34" width="120" height="46" rx="7" fill="#1fe3c6" opacity=".85" transform="skewX(-12)"/>
+    <circle cx="150" cy="52" r="10" fill="#fff" opacity=".9"/><path d="M118 70 l14-16 10 10 12-14" stroke="#15101d" stroke-width="3" fill="none" stroke-linecap="round"/>
+  </g></svg>`,
+  ai:`<svg viewBox="0 0 200 150"><g class="pop">
+    <path class="draw" d="M30 110 C40 40 110 40 120 100 S175 60 180 40" fill="none" stroke="#ff3d87" stroke-width="3"/>
+    ${[[30,110],[120,100],[180,40]].map(p=>`<rect x="${p[0]-5}" y="${p[1]-5}" width="10" height="10" fill="#15101d" stroke="#1fe3c6" stroke-width="2"/>`).join('')}
+    <line x1="120" y1="100" x2="90" y2="70" stroke="#9a7bff" stroke-width="1.5"/><circle cx="90" cy="70" r="4" fill="#9a7bff"/>
+    <line x1="120" y1="100" x2="150" y2="118" stroke="#9a7bff" stroke-width="1.5"/><circle cx="150" cy="118" r="4" fill="#9a7bff"/>
+    <path d="M150 20 l10 26 -9 -5 -5 9 Z" fill="#ffbe2e"/>
+  </g></svg>`,
+  id:`<svg viewBox="0 0 200 150"><g class="pop">
+    <rect x="22" y="28" width="72" height="94" rx="4" fill="#12201a" stroke="#49d888" stroke-width="2"/>
+    <rect x="106" y="28" width="72" height="94" rx="4" fill="#12201a" stroke="#49d888" stroke-width="2"/>
+    <rect x="30" y="36" width="56" height="20" rx="2" fill="#49d888" opacity=".7"/>
+    ${[62,72,82,92,102].map(y=>`<rect x="30" y="${y}" width="56" height="4" rx="2" fill="#b4a6c8"/>`).join('')}
+    ${[40,50,60,70,80,90,100].map(y=>`<rect x="114" y="${y}" width="56" height="4" rx="2" fill="#b4a6c8"/>`).join('')}
+    <text x="58" y="118" fill="#49d888" font-size="7" text-anchor="middle">1</text><text x="142" y="118" fill="#49d888" font-size="7" text-anchor="middle">2</text>
+  </g></svg>`,
+  exam:`<svg viewBox="0 0 200 150"><g class="pop">
+    <rect x="52" y="22" width="96" height="112" rx="8" fill="#1a1430" stroke="#9a7bff" stroke-width="2"/>
+    <rect x="80" y="14" width="40" height="16" rx="5" fill="#9a7bff"/>
+    ${[42,66,90].map((y,i)=>`<rect x="66" y="${y}" width="16" height="16" rx="4" fill="#15101d" stroke="#49d888" stroke-width="2"/><path d="M69 ${y+8} l4 4 7 -9" stroke="#49d888" stroke-width="2.5" fill="none" stroke-linecap="round"/><rect x="90" y="${y+3}" width="44" height="5" rx="2" fill="#b4a6c8"/><rect x="90" y="${y+12}" width="30" height="5" rx="2" fill="#6d6382"/>`).join('')}
+    <path d="M150 104 l6 16 -6 -4 -6 4 Z" fill="#ffbe2e"/>
+  </g></svg>`
+};
+
+/* ================= EXTRA VIDEOS ================= */
+const MOREVID={
+  fund:[
+    {id:'73o_UnmAeP0',t:'PPI vs DPI vs Resolution explained',by:'Resolution guide',len:'12:28'},
+    {id:'feGjpHXBAYc',t:'DPI (dots per inch) explained',by:'Print basics',len:'6:19'}
+  ],
+  theory:[
+    {id:'ERlfr4xMLXU',t:'Colour theory: 5 rules designers use',by:'Design basics',len:'4:10'},
+    {id:'2QTHs7QSR9o',t:'Colour theory for beginners (full)',by:'Design course',len:'18:40'},
+    {id:'dIJxxFKPW-k',t:'Seeing design everywhere',by:'GCFLearnFree',len:'3:46'}
+  ],
+  ps:[
+    {id:'qvQie2QP5Vg',t:'Photoshop beginners course (12 hours)',by:'Full course',len:'12h'},
+    {id:'09D9oA2pZv4',t:'Learn Photoshop in 60 minutes',by:'Quick course',len:'1:00:00'},
+    {id:'bisFGsLy9gE',t:'Learn Photoshop in 20 minutes',by:'Fast start',len:'20:00'}
+  ],
+  ai:[
+    {id:'Ib8UBwu3yGA',t:'Adobe Illustrator for beginners',by:'Envato Tuts+',len:'1h+'},
+    {id:'M5jOg2iDPeM',t:'Illustrator basics in 3 minutes',by:'Quick start',len:'3:00'},
+    {id:'c_n1fKN6C7U',t:'Best drawing tools in Illustrator',by:'Tools guide',len:'14:00'}
+  ],
+  id:[
+    {id:'Ywk5ZsffZRc',t:'InDesign pages for beginners',by:'Layout basics',len:'12:00'},
+    {id:'VqhvFeaLwjI',t:'Learn InDesign basics',by:'Beginner guide',len:'20:00'}
+  ],
+  exam:[
+    {id:'YqQx75OPRa0',t:'Fundamentals of design (recap)',by:'GCFLearnFree',len:'4:35'},
+    {id:'a5KYlHNKQB8',t:'Layout and composition (recap)',by:'GCFLearnFree',len:'5:12'}
+  ]
+};
+/* ================= EXTRA LINKS ================= */
+const MORELINK={
+  fund:[
+    ['Adobe: Raster vs vector','Official comparison explainer','https://www.adobe.com/creativecloud/file-types/image/comparison/raster-vs-vector.html',0],
+    ['Adobe: Image file types','What each format is for','https://www.adobe.com/creativecloud/file-types.html',0],
+    ['Envato Tuts+: Design','Huge library of design how-tos','https://design.tutsplus.com/',0]
+  ],
+  theory:[
+    ['Google Fonts Knowledge','Free, excellent typography lessons','https://fonts.google.com/knowledge',1],
+    ['Nielsen Norman Group','Trusted UX and visual design articles','https://www.nngroup.com/articles/',0],
+    ['Smashing Magazine','In-depth design articles','https://www.smashingmagazine.com/',0]
+  ],
+  ps:[
+    ['Adobe: Layer basics','Official layers how-to','https://helpx.adobe.com/photoshop/using/layer-basics.html',0],
+    ['PiXimperfect (channel)','Deep, free Photoshop teaching','https://www.youtube.com/@PiXimperfect',0]
+  ],
+  ai:[
+    ['Adobe: Drawing basics','Official paths and drawing guide','https://helpx.adobe.com/illustrator/using/drawing-basics.html',0],
+    ['Creative Bloq: Illustrator','Tutorials and professional tips','https://www.creativebloq.com/illustrator',0]
+  ],
+  id:[
+    ['Creative Bloq: InDesign','Layout tutorials and tips','https://www.creativebloq.com/indesign',0],
+    ['CreativePro (InDesign)','Respected InDesign resource site','https://creativepro.com/',0]
+  ],
+  exam:[
+    ['Envato Tuts+: Design','Broad revision library','https://design.tutsplus.com/',0]
+  ]
+};
+/* ================= LONG-ANSWER NOTES ================= */
+const NOTES={
+ fund:{intro:'Use these to prepare full 10-15 mark answers. Each opens into a model structure plus the key points markers look for.',qa:[
+  ['Explain raster and vector images. Give examples and state when to use each.',`
+   <p><b>Definition.</b> A <b>raster</b> (bitmap) image is made of a fixed grid of coloured <b>pixels</b>. A <b>vector</b> image is made of mathematical <b>paths</b> - points, lines and curves.</p>
+   <p><b>Key differences.</b></p>
+   <ul>
+     <li><b>Scalability:</b> raster loses quality (pixelates) when enlarged beyond its resolution; vector scales to any size with no loss.</li>
+     <li><b>Detail:</b> raster captures rich photographic detail, gradients and texture; vector suits flat, crisp shapes.</li>
+     <li><b>File size:</b> raster depends on pixel count and bit depth (can be large); vector files are usually light.</li>
+     <li><b>Resolution:</b> raster is resolution-dependent; vector is resolution-independent.</li>
+     <li><b>Software/formats:</b> raster = Photoshop (JPEG, PNG, TIFF, PSD); vector = Illustrator (AI, SVG, EPS, PDF).</li>
+   </ul>
+   <p><b>When to use.</b> Use raster for photographs, photo editing, compositing and screen imagery. Use vector for logos, icons, typography and illustrations that must print or scale at many sizes.</p>
+   <p><b>Example.</b> A company logo is drawn as vector so it stays sharp on a business card and a billboard; the product photo beside it is raster.</p>
+   <p><b>Conclusion.</b> The choice depends on the content (photographic vs graphic) and the output (fixed size vs many sizes).</p>`],
+  ['Describe bit depth and how colour is stored in a digital image.',`
+   <p><b>Bits and bytes.</b> A <b>bit</b> is the smallest unit of data (0 or 1). Eight bits make one <b>byte</b>.</p>
+   <p><b>Bit depth</b> is the number of bits used to describe the colour of a single pixel. More bits = more possible colours and smoother tonal transitions.</p>
+   <ul>
+     <li><b>1-bit:</b> 2 values (black or white).</li>
+     <li><b>8-bit:</b> 256 levels per channel - the standard for most images.</li>
+     <li><b>16-bit:</b> 65,536 levels per channel - used for heavy editing and smooth gradients.</li>
+     <li><b>32-bit:</b> floating-point, for HDR and very wide tonal range.</li>
+   </ul>
+   <p><b>Channels.</b> A colour image is built from channels. An RGB image has three (Red, Green, Blue). In 8-bit RGB, each channel has 256 levels, so the total is 256 x 256 x 256 = <b>16,777,216</b> (about 16.7 million) colours.</p>
+   <p><b>Why 16-bit for editing.</b> More levels give more "headroom", so strong adjustments (curves, large tonal shifts) do not cause banding in gradients. Final files are usually delivered as 8-bit.</p>
+   <p><b>Conclusion.</b> Bit depth directly controls colour range, gradient smoothness and file size.</p>`],
+  ['Compare the RGB and CMYK colour models and explain why conversion is needed for print.',`
+   <p><b>RGB</b> (Red, Green, Blue) is an <b>additive</b> model used by screens that emit light. Adding all three at full strength gives white; absence gives black.</p>
+   <p><b>CMYK</b> (Cyan, Magenta, Yellow, Key/Black) is a <b>subtractive</b> model used in printing with inks. Inks absorb (subtract) light; more ink gives darker colour. Black (K) adds depth and saves coloured ink.</p>
+   <p><b>Gamut.</b> RGB can display a wider range of colours than CMYK can print. Very bright, saturated screen colours may appear slightly duller once printed - this is normal.</p>
+   <p><b>Workflow.</b> Design on screen in RGB, then convert to CMYK (and soft-proof) before sending to print, so the printed result matches expectations.</p>
+   <p><b>Also mention:</b> HSB/HSL (a human-friendly way to pick colour) and Grayscale (a single grey channel).</p>
+   <p><b>Conclusion.</b> Match the model to the output: RGB for screen, CMYK for print.</p>`],
+  ['Explain resolution and its types, and how it affects print quality and file size.',`
+   <p><b>Resolution</b> is the amount of detail in an image.</p>
+   <ul>
+     <li><b>PPI (pixels per inch):</b> image detail in a file; 300 PPI is the usual print target, 72 PPI is screen-era low-res.</li>
+     <li><b>DPI (dots per inch):</b> how many ink dots a printer lays per inch.</li>
+     <li><b>Pixel dimensions:</b> screen resolution, e.g. 1920 x 1080 (Full HD), 3840 x 2160 (4K).</li>
+     <li><b>LPI (lines per inch):</b> halftone screen frequency in professional printing.</li>
+   </ul>
+   <p><b>Effect on quality.</b> Too few pixels for the print size causes blur or visible pixels. Enough PPI at the final size gives sharp output.</p>
+   <p><b>Effect on file size.</b> File size grows with more pixels, higher bit depth and less compression.</p>
+   <p><b>Conclusion.</b> Set resolution to suit the output medium and size before starting work - it cannot be truly added later.</p>`],
+  ['Describe the common image file formats and how you would choose between them.',`
+   <p><b>Raster formats.</b></p>
+   <ul>
+     <li><b>JPEG:</b> lossy compression, small files, no transparency - best for photographs.</li>
+     <li><b>PNG:</b> lossless, supports transparency - best for graphics and screen use.</li>
+     <li><b>GIF:</b> 256 colours, supports simple animation and transparency.</li>
+     <li><b>TIFF:</b> lossless, high quality - archiving and print.</li>
+     <li><b>PSD:</b> Photoshop master with editable layers.</li>
+   </ul>
+   <p><b>Vector formats.</b> SVG (scalable web graphics), EPS (exchange/print), AI (Illustrator master).</p>
+   <p><b>Flexible.</b> PDF can carry raster and vector and is ideal for sharing and print delivery.</p>
+   <p><b>Choosing.</b> Ask: photo or graphic? transparency needed? screen or print? editable master or final export? Those answers point to the right format.</p>`]
+ ]},
+ theory:{intro:'Model structures for the big theory questions. Define, explain with an example, then give the "why it matters".',qa:[
+  ['Discuss the elements and principles of design with examples.',`
+   <p><b>Elements (the building blocks):</b> line, shape, form, colour, value (light/dark), texture and space.</p>
+   <p><b>Principles (how elements are arranged):</b></p>
+   <ul>
+     <li><b>Balance:</b> even visual weight - symmetrical (formal) or asymmetrical (dynamic).</li>
+     <li><b>Contrast:</b> strong differences in size, colour or weight to create interest and focus.</li>
+     <li><b>Hierarchy:</b> ordering importance so the eye reads the key message first.</li>
+     <li><b>Alignment:</b> lining elements to a shared edge or grid for a tidy, intentional look.</li>
+     <li><b>Proximity:</b> grouping related items so they read as one unit.</li>
+     <li><b>Repetition:</b> reusing elements for unity and rhythm.</li>
+     <li><b>Emphasis:</b> a clear focal point.</li>
+     <li><b>White space:</b> intentional empty area giving focus and a premium feel.</li>
+   </ul>
+   <p><b>Example.</b> A poster with a large bold title (hierarchy, contrast), aligned text blocks (alignment), grouped event details (proximity) and generous margins (white space) reads clearly in seconds.</p>
+   <p><b>Why it matters.</b> Principles turn raw elements into clear, pleasing, purposeful communication.</p>`],
+  ['Explain typography: classifications of type and the key spacing terms.',`
+   <p><b>Type classifications.</b></p>
+   <ul>
+     <li><b>Serif:</b> has small feet; traditional, good for long printed text (e.g. Times).</li>
+     <li><b>Sans-serif:</b> clean, no feet; modern, great on screen (e.g. Helvetica).</li>
+     <li><b>Script:</b> handwriting-like, decorative.</li>
+     <li><b>Display:</b> bold, decorative - for headlines only.</li>
+     <li><b>Monospace:</b> equal-width characters, used for code.</li>
+   </ul>
+   <p><b>Spacing terms.</b> <b>Kerning</b> = space between two specific letters; <b>tracking</b> = overall letter spacing across words; <b>leading</b> = vertical space between lines.</p>
+   <p><b>Readability rules.</b> Limit to 2-3 typefaces, ensure enough size and contrast, use hierarchy (size/weight/colour) so headline and body are instantly distinct.</p>
+   <p><b>Why it matters.</b> Good typography is most of good design - it carries the message and sets the tone.</p>`],
+  ['Explain colour theory: the colour wheel, schemes, properties and psychology.',`
+   <p><b>Colour wheel.</b> Primary, secondary and tertiary colours arranged in a circle to show relationships.</p>
+   <p><b>Properties.</b> <b>Hue</b> (the colour itself), <b>saturation</b> (intensity), <b>value/brightness</b> (light or dark). The HSB model picks colour this way.</p>
+   <p><b>Schemes.</b></p>
+   <ul>
+     <li><b>Complementary:</b> opposite colours - maximum contrast, bold.</li>
+     <li><b>Analogous:</b> neighbours - calm, harmonious.</li>
+     <li><b>Triadic:</b> three evenly spaced - vibrant but balanced.</li>
+     <li><b>Monochromatic:</b> one hue in many values - clean and elegant.</li>
+   </ul>
+   <p><b>Psychology.</b> Red = energy/urgency, blue = trust/calm, green = nature/growth, yellow = optimism. Meaning varies by culture, so consider the audience.</p>
+   <p><b>Why it matters.</b> Colour sets mood, guides attention and supports branding.</p>`],
+  ['Discuss composition and layout principles for effective visual communication.',`
+   <p><b>Grids.</b> An underlying structure of columns and rows that keeps elements aligned, consistent and quick to arrange.</p>
+   <p><b>Rule of thirds.</b> Divide the frame into a 3x3 grid and place key elements on the lines or intersections for a balanced, interesting composition.</p>
+   <p><b>Balance.</b> Distribute visual weight evenly (symmetry) or deliberately off-centre (asymmetry) for energy.</p>
+   <p><b>White space.</b> Negative space is not wasted; it improves focus, legibility and a sense of quality.</p>
+   <p><b>Visual flow.</b> Guide the eye with size, direction and spacing - readers often follow a Z or F pattern across a page.</p>
+   <p><b>Why it matters.</b> Strong layout makes the message effortless to read and remember.</p>`],
+  ['What is a brand identity and why is consistency important?',`
+   <p><b>Brand identity</b> is the visual system that makes an organisation recognisable: logo, colour palette, typography, imagery style, graphic elements and tone of voice.</p>
+   <p><b>Components.</b> Logo (primary mark and variations), colour palette (primary and secondary), typography (heading and body fonts), imagery/illustration style, and layout rules.</p>
+   <p><b>Style guide.</b> A document that records all these rules so everyone applies them the same way.</p>
+   <p><b>Why consistency matters.</b> Repetition across touchpoints (web, print, social, packaging) builds recognition, trust and memory. Inconsistency confuses the audience and weakens the brand.</p>
+   <p><b>Example.</b> A festival that uses the same logo, two signature colours and one headline font across posters, tickets and social posts feels unified and professional.</p>`]
+ ]},
+ ps:{intro:'Photoshop long answers usually ask about layers, masks, non-destructive editing and workflow. Use these outlines.',qa:[
+  ['Explain layers in Photoshop and the idea of non-destructive editing.',`
+   <p><b>Layers</b> stack like transparent sheets so each part of an image can be edited independently without affecting the rest.</p>
+   <p><b>Types/tools that keep editing non-destructive:</b></p>
+   <ul>
+     <li><b>Adjustment layers</b> (Levels, Curves, Hue/Saturation) change colour and tone that can be toggled or re-edited any time.</li>
+     <li><b>Layer masks</b> hide or reveal parts of a layer using black (hide) and white (reveal) - nothing is deleted.</li>
+     <li><b>Smart Objects</b> preserve the original data so you can scale or re-edit repeatedly without quality loss; Smart Filters apply effects you can switch off.</li>
+     <li><b>Opacity and blending modes</b> control how layers combine (Multiply darkens, Screen lightens).</li>
+   </ul>
+   <p><b>Why non-destructive editing matters.</b> The original stays safe, edits remain reversible, and client changes are quick - a professional standard.</p>
+   <p><b>Conclusion.</b> Layers plus masks, adjustment layers and Smart Objects are the core of flexible, high-quality Photoshop work.</p>`],
+  ['Describe selection and masking techniques in Photoshop.',`
+   <p><b>Selections</b> isolate an area so edits only affect that region. Tools include:</p>
+   <ul>
+     <li><b>Marquee</b> (rectangular/elliptical) for simple shapes.</li>
+     <li><b>Lasso</b> (freehand, polygonal, magnetic) for irregular areas.</li>
+     <li><b>Quick Selection / Object Selection / Select Subject</b> for smart, fast selections.</li>
+     <li><b>Colour Range</b> selects by colour.</li>
+   </ul>
+   <p><b>Masks.</b> A <b>layer mask</b> controls visibility non-destructively (black hides, white reveals, grey is partial). A <b>clipping mask</b> shows a layer only inside the shape of the layer below. <b>Vector masks</b> use paths for crisp edges.</p>
+   <p><b>Refinement.</b> Select and Mask workspace refines edges (hair, fur) with feather and edge detection.</p>
+   <p><b>Why it matters.</b> Clean selections and masks are the basis of retouching and compositing.</p>`],
+  ['Outline the workflow for a photo composite or product retouch.',`
+   <p><b>1. Plan.</b> Decide what to combine or fix and where it will be used (screen = RGB, print = CMYK, correct resolution).</p>
+   <p><b>2. Set up.</b> Open elements as layers; convert key layers to Smart Objects.</p>
+   <p><b>3. Select and mask.</b> Use Select Subject and layer masks to cut out and blend elements - never the eraser, so edits stay reversible.</p>
+   <p><b>4. Match.</b> Match lighting, perspective and colour across elements using adjustment layers and blending modes.</p>
+   <p><b>5. Retouch.</b> Use the Healing Brush, Clone Stamp and Content-Aware Fill for blemishes and removals; Dodge and Burn for local light.</p>
+   <p><b>6. Finish.</b> Keep the layered PSD master; export JPEG/PNG for screen or a print-ready file for print.</p>
+   <p><b>Why it matters.</b> A planned, non-destructive workflow gives believable, editable results.</p>`],
+  ['Explain colour modes and exporting for screen versus print in Photoshop.',`
+   <p><b>Colour mode.</b> Work in <b>RGB</b> for anything shown on screen; convert to <b>CMYK</b> for print. Grayscale for single-colour work.</p>
+   <p><b>Resolution.</b> 72 PPI is fine for screen; 300 PPI is the print standard - set this at document creation.</p>
+   <p><b>Export for screen.</b> JPEG for photos (small), PNG for graphics/transparency; use Export As or Save for Web for optimised sizes.</p>
+   <p><b>Export for print.</b> Flatten a copy, convert to CMYK, and export a high-resolution TIFF or press-ready PDF; keep the layered PSD master.</p>
+   <p><b>Why it matters.</b> Correct mode, resolution and format prevent dull colours, blur or oversized files.</p>`]
+ ]},
+ ai:{intro:'Illustrator long answers centre on vectors, paths, shape-building and logo/icon workflow.',qa:[
+  ['Explain vector graphics and how paths are drawn in Illustrator.',`
+   <p><b>Vector graphics</b> are defined by mathematics - points and curves - so they scale to any size with no loss of quality, ideal for logos and icons.</p>
+   <p><b>Paths and anchor points.</b> A <b>path</b> is a line or shape made of <b>anchor points</b> joined by segments. Points can be corner (sharp) or smooth (curved); <b>handles</b> control the curvature.</p>
+   <p><b>The Pen tool</b> places anchor points to draw precise straight lines and curves - the core drawing skill in Illustrator. The Curvature and Pencil tools offer easier alternatives.</p>
+   <p><b>Fill and stroke.</b> Every object has a <b>fill</b> (inside colour) and a <b>stroke</b> (outline, with adjustable weight and style).</p>
+   <p><b>Why it matters.</b> Mastering paths and the Pen tool lets you build any clean, scalable shape.</p>`],
+  ['Describe how shapes are built and combined in Illustrator.',`
+   <p><b>Start simple.</b> Build complex artwork from basic shapes (rectangle, ellipse, polygon).</p>
+   <p><b>Pathfinder</b> combines or cuts shapes: Unite (merge), Minus Front (subtract), Intersect (overlap only), Divide (split).</p>
+   <p><b>Shape Builder</b> merges or removes areas by dragging across overlapping shapes.</p>
+   <p><b>Align and Distribute</b> keep objects lined up and evenly spaced - essential for an icon set.</p>
+   <p><b>Organise</b> with groups, layers and artboards so artwork stays manageable; artboards hold several variations in one file.</p>
+   <p><b>Why it matters.</b> Combining simple shapes is faster and cleaner than drawing everything by hand.</p>`],
+  ['Explain the workflow and consistency rules for designing a logo or icon set.',`
+   <p><b>1. Brief and research.</b> Understand the brand, audience and where the mark will appear.</p>
+   <p><b>2. Sketch then build.</b> Draft ideas, then build in vector with the Pen and shape tools.</p>
+   <p><b>3. Consistency rules (vital for a set):</b> use the same grid, stroke weight, corner radius, visual style and colour across all icons so they feel like a family.</p>
+   <p><b>4. Colour and type.</b> Use global swatches for easy, consistent colour; Create Outlines on text so fonts are not needed elsewhere.</p>
+   <p><b>5. Test at sizes.</b> Check the mark works small (favicon) and large (banner), and in one colour.</p>
+   <p><b>6. Deliver.</b> AI (master), SVG/EPS (scalable/print), PNG (quick raster use).</p>
+   <p><b>Why it matters.</b> Consistency and scalability are what separate a professional identity from a random drawing.</p>`],
+  ['Explain type handling, colour management and file delivery in Illustrator.',`
+   <p><b>Type.</b> Use point type for short text and area type for paragraphs. <b>Create Outlines</b> converts live text to vector shapes so the font is not required on another machine (keep an editable copy first).</p>
+   <p><b>Colour.</b> Set the document to CMYK for print or RGB for screen. Use <b>global swatches</b> and colour groups so one change updates everywhere.</p>
+   <p><b>Delivery formats.</b> AI (editable master), SVG (web vector), EPS (exchange/print), PDF (sharing/print), PNG/JPEG (raster previews).</p>
+   <p><b>Why it matters.</b> Correct type and colour handling prevents font and colour surprises at output.</p>`]
+ ]},
+ id:{intro:'InDesign long answers focus on multi-page layout, master pages, styles and print production.',qa:[
+  ['Explain the fundamentals of page layout in InDesign.',`
+   <p><b>Purpose.</b> InDesign is built for multi-page, structured documents - magazines, brochures, booklets, books.</p>
+   <p><b>Frames.</b> Everything sits in a frame (text frame or graphic frame). Use <b>Place</b> (not paste) to import text and images so they stay linked and high quality.</p>
+   <p><b>Text flow.</b> <b>Threading</b> links text frames so a story flows automatically from one to the next and across pages.</p>
+   <p><b>Structure.</b> Columns, margins, guides and a baseline grid keep the layout aligned and readable; a <b>spread</b> is two facing pages seen together.</p>
+   <p><b>Why it matters.</b> This structure makes long documents consistent and efficient to build.</p>`],
+  ['Explain master (parent) pages and styles, and why they aid consistency.',`
+   <p><b>Master / parent pages</b> are template pages holding repeating items - page numbers, headers, footers, margins - that appear automatically on every page based on them.</p>
+   <p><b>Styles.</b></p>
+   <ul>
+     <li><b>Paragraph styles:</b> a saved set of text formatting applied in one click to whole paragraphs.</li>
+     <li><b>Character styles:</b> formatting for selected characters (e.g. bold key terms).</li>
+     <li><b>Object styles:</b> saved formatting for frames and boxes.</li>
+   </ul>
+   <p><b>Benefit.</b> Change a style once and every instance updates across all pages - fast, consistent and professional.</p>
+   <p><b>Why it matters.</b> Master pages and styles are what make large documents consistent and quick to update; examiners reward mentioning them.</p>`],
+  ['Describe the steps to prepare an InDesign document for professional print.',`
+   <p><b>1. Set up correctly.</b> Correct page size, facing pages if needed, margins, columns, and <b>bleed</b> (usually 3 mm) at creation.</p>
+   <p><b>2. Keep a safe area.</b> Important content stays inside the margins, away from the trim.</p>
+   <p><b>3. Check images.</b> Use the <b>Links</b> panel to confirm no image is missing or low-resolution.</p>
+   <p><b>4. Colour.</b> Use CMYK for print colours and images.</p>
+   <p><b>5. Preflight.</b> Run Preflight to catch errors (missing fonts, links, overset text) before export.</p>
+   <p><b>6. Export / package.</b> Export a print PDF (PDF/X) with crop marks and bleed, or use <b>Package</b> to collect the file, fonts and links into one folder for the printer.</p>
+   <p><b>Why it matters.</b> These steps prevent white edges, missing images and colour surprises at the press.</p>`],
+  ['When would you use InDesign rather than Photoshop or Illustrator? Justify your choice.',`
+   <p><b>Use InDesign</b> for multi-page, text-heavy layouts where consistency and flowing text matter - magazines, brochures, reports, books. Its master pages, styles and threading are built for this.</p>
+   <p><b>Use Photoshop</b> for pixel work - photo editing, retouching and compositing.</p>
+   <p><b>Use Illustrator</b> for vector artwork - logos, icons and illustrations that must scale.</p>
+   <p><b>Typical pipeline.</b> Edit photos in Photoshop, draw the logo and graphics in Illustrator, then assemble everything into the final laid-out document in InDesign.</p>
+   <p><b>Why it matters.</b> Choosing the right tool for each task gives better results and a smoother workflow.</p>`]
+ ]},
+ exam:{intro:'Method, pitfalls, and a fully worked model answer so you know the standard expected.',qa:[
+  ['How should you answer a Section C design-task question? Explain your method.',`
+   <p>Section C asks you to <b>write</b> the plan for a design job - you are not doing it on a computer. Use this four-part structure every time:</p>
+   <ol>
+     <li><b>The brief in one line:</b> restate the job, size, audience and must-haves.</li>
+     <li><b>Software choice and why:</b> name the right app (Photoshop/Illustrator/InDesign) and justify it.</li>
+     <li><b>Step-by-step workflow:</b> setup, build, imagery/type, and the design decisions (hierarchy, grid, colour) with reasons.</li>
+     <li><b>Export and finishing:</b> colour mode (RGB/CMYK), resolution, bleed if print, and file type delivered.</li>
+   </ol>
+   <p><b>Earn extra marks</b> by using exact vocabulary (non-destructive, master pages, vector, bleed) and by always giving the reason, not just the action.</p>`],
+  ['What are common exam mistakes and how do you avoid them?',`
+   <ul>
+     <li><b>Describing software clicks for Section C instead of a planned approach</b> - give a structured plan with reasons.</li>
+     <li><b>Naming a term without a reason in Section B</b> - always add why it works.</li>
+     <li><b>Leaving blanks</b> - attempt everything; partial answers still score.</li>
+     <li><b>Poor time management</b> - bank quick Section A marks first, then invest in B and C.</li>
+     <li><b>Vague language</b> - use the correct technical vocabulary.</li>
+     <li><b>No finishing details</b> - mention colour mode, resolution, bleed and file type for any output task.</li>
+   </ul>`],
+  ['Model answer: Plan the design of an A4 cultural festival poster for print.',`
+   <p><i>This is the standard a full-mark Section C answer aims for.</i></p>
+   <p><b>Brief.</b> Design an A4 portrait poster for a college cultural festival; audience is students; it must show the festival name, dates, venue and a QR code, and be print-ready.</p>
+   <p><b>Software and setup.</b> I would use InDesign for the layout (or Illustrator for a more graphic poster), because it gives precise control of type and alignment. I would create an A4 document in CMYK at 300 PPI with 3 mm bleed and sensible margins.</p>
+   <p><b>Workflow and decisions.</b> I would set a simple grid for alignment. Using hierarchy, the festival name would be the largest, boldest element at the focal point; dates and venue second; supporting details smallest. I would choose a colour palette that suits a lively festival (for example a bold complementary pair) and limit type to two typefaces - a strong display face for the title and a clean sans-serif for details. Any photograph would be treated in Photoshop first and placed (not pasted) so it stays high quality; I would keep strong contrast between text and background for readability. The QR code and logos would sit in a clear, aligned area.</p>
+   <p><b>Finishing for print.</b> I would check image resolution and the Links panel, run Preflight, keep content inside the safe margins, and export a print PDF (PDF/X) in CMYK with 3 mm bleed and crop marks, ready for the printer.</p>
+   <p><b>Why this works.</b> Clear hierarchy and contrast make the key information instantly readable, the grid keeps it tidy, and the print setup (CMYK, 300 PPI, bleed) ensures a clean, professional result.</p>`]
+ ]}
+};
+
+/* ================= RENDER ================= */
+const pills=document.getElementById('pills'), content=document.getElementById('content');
+let progress={};
+const TOTAL=DATA.reduce((n,c)=>n+c.cards.length+c.quiz.length,0)+WALK.length;
+const allVids=c=>c.videos.concat(MOREVID[c.id]||[]);
+const allLinks=c=>c.links.concat(MORELINK[c.id]||[]);
+const nC=DATA.reduce((n,c)=>n+c.cards.length,0), nQ=DATA.reduce((n,c)=>n+c.quiz.length,0),
+      nV=DATA.reduce((n,c)=>n+allVids(c).length,0), nL=DATA.reduce((n,c)=>n+allLinks(c).length,0);
+function anim(el,to){let s=0;const t=900,st=performance.now();(function f(n){let p=Math.min(1,(n-st)/t);el.textContent=Math.round(to*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(f);})(st);}
+anim(document.getElementById('sC'),nC);anim(document.getElementById('sQ'),nQ);
+anim(document.getElementById('sV'),nV);anim(document.getElementById('sL'),nL);
+
+DATA.forEach((c,i)=>{
+  const p=document.createElement('button');
+  p.className='pill'+(i===0?' on':'');
+  p.innerHTML=`<span class="n">${i+1}</span>${c.name}`;
+  p.dataset.bg=c.accent; p.onclick=()=>show(c.id,p); pills.appendChild(p);
+});
+const wp=document.createElement('button');
+wp.className='pill'; wp.dataset.bg='#9a7bff';
+wp.innerHTML='<span class="n">C</span>Section C Walkthroughs'; wp.onclick=()=>show('walk',wp); pills.appendChild(wp);
+
+function esc(s){return s.replace(/"/g,'&quot;');}
+DATA.forEach((c,i)=>{
+  const s=document.createElement('section');
+  s.className='cat'+(i===0?' show':''); s.id='sec-'+c.id; s.style.setProperty('--accent',c.accent);
+  s.innerHTML=`
+    <div class="sbanner" style="background:linear-gradient(135deg,var(--card),var(--card2))">
+      <div class="sb-txt">
+        <span class="tag" style="background:${c.accent}">${c.tag}</span>
+        <h3>${c.name}</h3>
+        <p>${c.intro}</p>
+      </div>
+      <div class="sb-ill">${HEROSVG[c.id]||''}</div>
+    </div>
+    <div class="card exam accentbar">
+      <h4><span class="ei" style="color:${c.accent}">${ICONS.star}</span>Exam focus</h4>
+      <p class="lead">${c.exam.sec}</p>
+      <div class="chips">${c.exam.chips.map(x=>`<span class="chip">${x}</span>`).join('')}</div>
+      <div class="def"><b>How to answer:</b> ${c.exam.tip}</div>
+    </div>
+    <div class="card accentbar learn"><h4><span class="ei" style="color:${c.accent}">${ICONS.pencil}</span>Learn</h4>${c.learn}</div>
+    ${NOTES[c.id]?`<div class="card accentbar notes">
+      <h4><span class="ei" style="color:${c.accent}">${ICONS.book}</span>Long-answer exam notes <span style="font-size:.8rem;color:var(--mut);font-weight:400">(${NOTES[c.id].qa.length})</span></h4>
+      <p class="lead">${NOTES[c.id].intro}</p>
+      ${NOTES[c.id].qa.map((n,ni)=>`<details data-id="${c.id}" data-k="n${ni}"><summary>Q${ni+1}. ${n[0]}</summary><div class="ans">${n[1]}</div></details>`).join('')}
+    </div>`:''}
+    <div class="card accentbar">
+      <h4><span class="ei" style="color:${c.accent}">${ICONS.cards}</span>Flashcards <span style="font-size:.8rem;color:var(--mut);font-weight:400">(${c.cards.length})</span></h4>
+      <p class="lead">Tap a card to flip. Say the answer before you flip - that is what makes it stick.</p>
+      <div class="fctools"><button class="mini" data-flipall="${c.id}">Flip all</button><button class="mini" data-reset="${c.id}">Reset</button></div>
+      <div class="fcrow" id="fc-${c.id}">${c.cards.map((cd,ci)=>`
+        <div class="flip" data-id="${c.id}" data-k="c${ci}" tabindex="0">
+          <div class="flipin"><div class="face front">${cd[0]}</div><div class="face back">${cd[1]}</div></div><small>flip</small>
+        </div>`).join('')}</div>
+    </div>
+    <div class="card accentbar">
+      <h4><span class="ei" style="color:${c.accent}">${ICONS.check}</span>Quiz yourself <span style="font-size:.8rem;color:var(--mut);font-weight:400">(${c.quiz.length})</span></h4>
+      <p class="lead">No pressure - pick an answer and you will see why. Mistakes help you remember.</p>
+      ${c.quiz.map((q,qi)=>`
+        <div class="q" data-id="${c.id}" data-k="q${qi}" data-a="${q.a}">
+          <div class="stem">${qi+1}. ${q.s}</div>
+          ${q.o.map((o,oi)=>`<button class="opt" data-oi="${oi}">${String.fromCharCode(65+oi)}. ${o}</button>`).join('')}
+          <div class="fb" data-e="${esc(q.e)}"></div>
+        </div>`).join('')}
+      <div class="qscore"></div>
+    </div>
+    <div class="card accentbar">
+      <h4><span class="ei" style="color:${c.accent}">${ICONS.play}</span>Watch - video tutorials</h4>
+      <p class="lead">Trusted channels. Tap a thumbnail to open the video on YouTube.</p>
+      <div class="vgrid">${allVids(c).map(v=>`
+        <a class="vcard" href="https://youtu.be/${v.id}" target="_blank" rel="noopener">
+          <span class="thumb" style="background-image:url('https://img.youtube.com/vi/${v.id}/hqdefault.jpg'),linear-gradient(135deg,${c.accent},#2a1838)">
+            <span class="plabel">${ICONS.play} Video</span>
+            <span class="play"><span></span></span><span class="vlen">${v.len}</span>
+          </span>
+          <span class="vmeta"><b>${v.t}</b><span>${v.by}</span></span>
+        </a>`).join('')}</div>
+    </div>
+    <div class="card accentbar">
+      <h4><span class="ei" style="color:${c.accent}">${ICONS.globe}</span>Read - trusted websites</h4>
+      <p class="lead">Hand-picked, high-value resources to go deeper.</p>
+      <div class="res">${allLinks(c).map(r=>`
+        <a class="reslink" href="${r[2]}" target="_blank" rel="noopener">
+          <div class="ic" style="color:${c.accent};background:${c.accent}22">${ICONS.globe}</div>
+          <div><b>${r[0]}${r[3]?'<span class="badge">Free course</span>':''}</b><span>${r[1]}</span></div>
+        </a>`).join('')}</div>
+    </div>`;
+  content.appendChild(s);
+});
+
+/* walkthroughs */
+const ws=document.createElement('section');
+ws.className='cat'; ws.id='sec-walk'; ws.style.setProperty('--accent','#9a7bff');
+ws.innerHTML=`
+  <div class="sbanner" style="background:linear-gradient(135deg,var(--card),var(--card2))">
+    <div class="sb-txt">
+      <span class="tag" style="background:#9a7bff">Section C</span>
+      <h3>Worked walkthroughs</h3>
+      <p>These show exactly how to WRITE a design-task answer. Same shape every time: brief, tool choice + why, steps, finishing. Open one and read it like a recipe.</p>
+    </div>
+    <div class="sb-ill">${HEROSVG.exam}</div>
+  </div>
+  ${WALK.map((w,wi)=>`
+    <div class="card accentbar" style="--accent:${w.acc}">
+      <details ${wi===0?'open':''} data-id="walk" data-k="w${wi}">
+        <summary>${wi+1}. ${w.t}</summary>
+        <div class="steps">${w.steps.map(st=>`<div class="step"><b>${st[0]}.</b> ${st[1]}</div>`).join('')}</div>
+      </details>
+    </div>`).join('')}
+  <div class="card exam accentbar" style="--accent:#9a7bff">
+    <h4><span class="ei" style="color:#9a7bff">${ICONS.star}</span>Remember</h4>
+    <div class="def">If you can write these four parts clearly, you can answer almost any Section C task - even one you have not seen before. The marker wants your thinking, not perfect software skills.</div>
+  </div>`;
+content.appendChild(ws);
+
+/* ================= INTERACTIONS ================= */
+function mark(id,k){(progress[id]=progress[id]||new Set()).add(k);updateBar();}
+function updateBar(){
+  let done=0;Object.values(progress).forEach(s=>done+=s.size);
+  const pct=Math.min(100,Math.round(done/TOTAL*100));
+  document.getElementById('bar').style.width=pct+'%';
+  document.getElementById('progtxt').textContent=
+    pct===0?'Your revision progress will show here as you flip cards and answer quizzes.'
+    :pct<100?pct+'% explored - keep going, you are doing great.'
+    :'All explored. You are ready - go in calm and confident.';
+  try{localStorage.setItem('ddt-prep2',JSON.stringify(Object.fromEntries(Object.entries(progress).map(([a,b])=>[a,[...b]]))));}catch(e){}
+}
+try{const sv=JSON.parse(localStorage.getItem('ddt-prep2')||'{}');Object.entries(sv).forEach(([a,b])=>progress[a]=new Set(b));}catch(e){}
+
+content.addEventListener('click',e=>{
+  const fa=e.target.closest('[data-flipall]');
+  if(fa){document.querySelectorAll('#fc-'+fa.dataset.flipall+' .flip').forEach(f=>{f.classList.add('on');mark(f.dataset.id,f.dataset.k);});return;}
+  const rs=e.target.closest('[data-reset]');
+  if(rs){document.querySelectorAll('#fc-'+rs.dataset.reset+' .flip').forEach(f=>f.classList.remove('on'));return;}
+  const fl=e.target.closest('.flip');
+  if(fl){fl.classList.toggle('on');mark(fl.dataset.id,fl.dataset.k);return;}
+  const op=e.target.closest('.opt');
+  if(op){
+    const q=op.closest('.q');if(q.classList.contains('answered'))return;
+    const a=+q.dataset.a,chosen=+op.dataset.oi;q.classList.add('answered');
+    [...q.querySelectorAll('.opt')].forEach(b=>{b.classList.add('lock');if(+b.dataset.oi===a)b.classList.add('correct');});
+    if(chosen!==a)op.classList.add('wrong');
+    const fb=q.querySelector('.fb');
+    fb.textContent=(chosen===a?'Correct. ':'Not quite. ')+fb.dataset.e;
+    fb.classList.add('show',chosen===a?'ok':'no');
+    mark(q.dataset.id,q.dataset.k);scoreCard(q.closest('.card'));
+  }
+});
+content.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){const fl=e.target.closest('.flip');if(fl){e.preventDefault();fl.classList.toggle('on');mark(fl.dataset.id,fl.dataset.k);}}});
+content.addEventListener('toggle',e=>{const d=e.target;if(d.open&&d.dataset.id)mark(d.dataset.id,d.dataset.k);},true);
+
+function scoreCard(card){
+  const qs=[...card.querySelectorAll('.q')],ans=qs.filter(q=>q.classList.contains('answered'));
+  if(ans.length!==qs.length)return;
+  const right=ans.filter(q=>!q.querySelector('.opt.wrong')).length;
+  const box=card.querySelector('.qscore');box.style.display='block';
+  box.textContent=`You scored ${right} / ${qs.length}. ${right===qs.length?'Perfect - you know this.':right>=qs.length*0.6?'Solid - review the ones you missed.':'Good start - reread the lesson and try again later.'}`;
+}
+function show(id,btn){
+  document.querySelectorAll('.cat').forEach(s=>s.classList.remove('show'));
+  document.getElementById('sec-'+id).classList.add('show');
+  [...pills.children].forEach(b=>b.classList.remove('on'));btn.classList.add('on');pillColor();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function pillColor(){[...pills.children].forEach(b=>{b.style.background=b.classList.contains('on')?(b.dataset.bg):'var(--card)';});}
+pillColor();updateBar();
+
+const tb=document.getElementById('themeBtn');
+tb.onclick=()=>{const h=document.documentElement;const light=h.getAttribute('data-theme')==='light';
+  h.setAttribute('data-theme',light?'dark':'light');tb.textContent=light?'Light mode':'Dark mode';
+  try{localStorage.setItem('ddt-theme',light?'dark':'light');}catch(e){}};
+try{if(localStorage.getItem('ddt-theme')==='light'){document.documentElement.setAttribute('data-theme','light');tb.textContent='Dark mode';}}catch(e){}
+</script>
+</body>
+</html>
